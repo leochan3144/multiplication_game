@@ -1,16 +1,13 @@
 <!doctype html>
 <html lang="en">
-  <meta name="viewport" content="width=device-width, initial-scale-1.0">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multiplication Sky Runner</title>
   <script src="/_sdk/element_sdk.js"></script>
-  <!-- MODIFICATION: Add Tone.js for audio effects -->
+  <!-- MODIFICATION: Add Tone.js for audio -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
   <style>
-        :root {
-            /* MODIFICATION: Removed --character-emoji variable */
-            /* --character-emoji: '🐰'; */
-        }
-
         body {
             box-sizing: border-box;
             margin: 0;
@@ -39,570 +36,344 @@
             height: 100%;
             background-image: 
                 radial-gradient(ellipse 80px 40px at 100px 100px, white 40%, transparent 50%),
-                radial-gradient(ellipse 60px 30px at 300px 150px, white 40%, transparent 50%),
-                radial-gradient(ellipse 100px 50px at 500px 80px, white 40%, transparent 50%),
-                radial-gradient(ellipse 70px 35px at 700px 200px, white 40%, transparent 50%);
-            animation: float 20s infinite linear;
+                radial-gradient(ellipse 60px 30px at 200px 50px, white 40%, transparent 50%),
+                radial-gradient(ellipse 100px 50px at 300px 120px, white 40%, transparent 50%),
+                radial-gradient(ellipse 70px 35px at 450px 80px, white 40%, transparent 50%),
+                radial-gradient(ellipse 90px 45px at 550px 150px, white 40%, transparent 50%),
+                radial-gradient(ellipse 80px 40px at 700px 100px, white 40%, transparent 50%),
+                radial-gradient(ellipse 60px 30px at 850px 60px, white 40%, transparent 50%),
+                radial-gradient(ellipse 100px 50px at 950px 130px, white 40%, transparent 50%);
+            background-size: 1000px 200px;
+            animation: moveClouds 20s linear infinite;
         }
 
-        @keyframes float {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-200px); }
-        }
-
-        .ui-panel {
-            position: absolute;
-            top: 10px;
-            left: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            /* MODIFICATION: Doubled top/bottom padding */
-            padding: 20px 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            /* MODIFICATION: Removed fixed height to make panel shorter */
-            /* height: 60px; */
-            /* max-height: 10%; */
-        }
-
-        .game-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            /* MODIFICATION: Added gap for spacing */
-            gap: 15px;
-            /* MODIFICATION: Removed margin-bottom */
-            /* margin-bottom: 8px; */
-        }
-
-        .level-display {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2E8B57;
-        }
-
-        .lives-display {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        #lives-container {
-            display: flex;
-            gap: 4px;
-        }
-
-        .heart {
-            width: 18px;
-            height: 18px;
-            background: #FF6B6B;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            transform: rotate(-45deg);
-            position: relative;
-        }
-
-        .heart::before {
-            content: '';
-            width: 9px;
-            height: 14px;
-            position: absolute;
-            left: 9px;
-            top: 0;
-            background: #FF6B6B;
-            border-radius: 50px 50px 0 0;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-        }
-
-        .heart::after {
-            content: '';
-            width: 9px;
-            height: 14px;
-            position: absolute;
-            left: 0;
-            top: -4px;
-            background: #FF6B6B;
-            border-radius: 50px 50px 0 0;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-
-        .score-display {
-            font-size: 14px;
-            font-weight: bold;
-            color: #4169E1;
-        }
-
-        .question-display {
-            text-align: center;
-            /* MODIFICATION: Doubled font size */
-            font-size: 28px;
-            font-weight: bold;
-            color: #2E8B57;
-            background: #F0F8FF;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 2px solid #4169E1;
-            /* MODIFICATION: Adjusted styles for flex layout */
-            flex-grow: 1; /* Take up remaining space */
-            margin: 0 10px; /* Add some spacing */
-            /* max-width: 150px; */
-            /* margin: 0 auto; */
+        @keyframes moveClouds {
+            0% { background-position: 0 0; }
+            100% { background-position: -1000px 0; }
         }
 
         .character {
             position: absolute;
-            left: 80px;
-            width: 60px;
-            height: 60px;
-            /* MODIFICATION: Removed background color and border */
-            /* background: #FFB6C1; */
-            /* border-radius: 50%; */
-            /* border: 3px solid #FF69B4; */
-            transition: top 0.1s ease;
-            z-index: 50;
-            /* MODIFICATION: Removed flex properties */
-            /* display: flex; */
-            /* align-items: center; */
-            /* justify-content: center; */
-            /* font-size: 30px; */
-
-            /* MODIFICATION: Changed path to use a local image */
-            background-image: url('image/cinnamoroll.png');
+            /* MODIFICATION: Use image instead of emoji */
+            width: 80px; 
+            height: 80px;
+            background-image: url('image/cinnamoroll.png'); 
             background-size: contain;
-            background-position: center;
             background-repeat: no-repeat;
+            background-position: center;
+            /* END MODIFICATION */
+            font-size: 50px;
+            cursor: pointer;
+            transition: top 0.1s;
+            z-index: 100;
         }
-
-        /* MODIFICATION: Removed ::before pseudo-element that showed the emoji */
-        /*
-        .character::before {
-            content: var(--character-emoji);
-            font-size: 40px;
-        }
-        */
 
         .answer-option {
             position: absolute;
-            /* MODIFICATION: Removed 'right: -600px;' */
-            /* right: -600px; */ 
-            
-            /* MODIFICATION: Set initial position using 'left' and 'transform' */
-            left: 100%; /* Start just off-screen to the right */
-            transform: translateX(600px); /* Add the 600px buffer */
-
+            font-size: 40px; /* MODIFICATION: Doubled size */
+            color: black; /* MODIFICATION: Changed to black */
+            font-weight: bold; /* MODIFICATION: Added bold */
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 50;
             width: 80px;
             height: 80px;
-            background: radial-gradient(circle at 30% 30%, #FFE4E1, #FFB6C1, #FF69B4);
-            border: 3px solid #FF1493;
-            border-radius: 50%;
             display: flex;
-            align-items: center;
             justify-content: center;
-            /* MODIFICATION: Doubled font size */
-            font-size: 28px;
-            font-weight: bold;
-            /* MODIFICATION: Changed color to black */
-            color: black;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.3);
-            /* MODIFICATION: Kept animation properties, but the @keyframe is now different */
-            animation: moveLeft 8s linear, candyShine 2s ease-in-out infinite alternate;
-            /* * BUG FIX: Removed 'position: relative;' which was overriding
-             * Also set animation 'infinite' to just 'linear' for moveLeft
-             * as it should only run once per candy.
-            */
-        }
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px white;
+            
+            /* MODIFICATION: Use transform for smooth animation */
+            right: -100px; /* Start off-screen */
+            animation-name: moveAnswer, bubbleBob;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: 1, infinite;
+            animation-direction: normal, alternate;
+            animation-fill-mode: forwards, none;
 
-        .answer-option::before {
-            /* MODIFICATION: Changed to candy icon */
-            content: '🍬';
-            position: absolute;
-            top: -8px;
-            right: -5px;
-            font-size: 20px;
-            z-index: 1;
+            /* MODIFICATION: Use same color for all */
+            background: #FFB6C1; /* Pink */
+            border: 3px solid #FF69B4; /* Hotter pink border */
         }
-
-        .answer-option::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 25px;
-            width: 20px;
-            height: 15px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            transform: rotate(-20deg);
-        }
-
-        /* MODIFICATION: Removed background and border color changes */
-        .answer-option.correct {
-            /* background: radial-gradient(circle at 30% 30%, #E6FFE6, #90EE90, #32CD32); */
-            /* border-color: #228B22; */
-        }
-
-        .answer-option.correct::before {
-            /* MODIFICATION: Removed icon override */
-            /* content: '🍬'; */
-        }
-
-        /* MODIFICATION: Removed background and border color changes */
-        .answer-option.wrong {
-            /* background: radial-gradient(circle at 30% 30%, #FFE4B5, #FFD700, #FFA500); */
-            /* border-color: #FF8C00; */
-        }
-
-        .answer-option.wrong::before {
-            /* MODIFICATION: Removed icon override */
-            /* content: '🧁'; */
-        }
-
-        @keyframes candyShine {
-            0% { box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.3); }
-            100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 4px 12px rgba(255, 255, 255, 0.5); }
-        }
-
-        /* MODIFICATION: Changed animation to use 'transform' for smoothness */
-        @keyframes moveLeft {
+        
+        /* MODIFICATION: Keyframes use transform instead of 'right' */
+        @keyframes moveAnswer {
             0% {
-                /* Start at left: 100%, transform: translateX(600px) */
-                transform: translateX(600px);
+                transform: translateX(0);
+                right: -100px; /* Initial position */
             }
             100% {
-                /* Move left so it's off-screen.
-                  (100vw = viewport width)
-                  (80px = self width)
-                  This moves the candy from (100vw + 600px) to (-80px)
-                */
-                transform: translateX(calc(-100vw - 80px - 600px));
+                transform: translateX(-110vw); /* Move across the viewport */
+                right: -100px; /* Keep 'right' consistent */
             }
         }
 
-        .game-over-screen, .level-complete-screen, .level-select-screen {
+
+        @keyframes bubbleBob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .ui-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 20px; /* MODIFICATION: Doubled padding */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 200;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        /* MODIFICATION: Layout for top panel */
+        .stats-left {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* MODIFICATION: Added gap */
+        }
+
+        #question {
+            font-size: 48px; /* MODIFICATION: Doubled size */
+            color: #333;
+            text-shadow: 1px 1px 1px #fff;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        #level-display, #lives-display {
+            color: #d9534f;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #score-display {
+            color: #5cb85c;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+
+        .start-screen, .game-over-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-        }
-
-        .level-select-screen {
-            display: flex;
-        }
-
-        .level-buttons {
+            background: rgba(0, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .level-btn {
-            padding: 20px;
-            text-align: left;
-            background: linear-gradient(45deg, #32CD32, #228B22);
-            min-width: 250px;
-        }
-
-        .level-btn:hover {
-            background: linear-gradient(45deg, #228B22, #006400);
-        }
-
-        .level-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .level-desc {
-            font-size: 16px;
-            margin-bottom: 3px;
-            opacity: 0.9;
-        }
-
-        .level-example {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .modal {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal h2 {
-            color: #2E8B57;
-            margin-bottom: 20px;
-            font-size: 36px;
-        }
-
-        .modal p {
-            font-size: 20px;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #4169E1, #6495ED);
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
             color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 10px;
-            transition: transform 0.2s;
+            text-align: center;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .controls-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .touch-controls {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 60;
-        }
-
-        .control-btn {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, rgba(255, 107, 107, 0.4), rgba(255, 142, 142, 0.4));
-            border: 2px solid rgba(255, 68, 68, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.8);
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .control-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .control-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .control-btn.up {
-            background: linear-gradient(45deg, rgba(76, 175, 80, 0.4), rgba(102, 187, 106, 0.4));
-            border-color: rgba(56, 142, 60, 0.5);
-        }
-
-        .control-btn.down {
-            background: linear-gradient(45deg, rgba(33, 150, 243, 0.4), rgba(66, 165, 245, 0.4));
-            border-color: rgba(25, 118, 210, 0.5);
-        }
-
-        .feedback {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .start-screen h1 {
             font-size: 48px;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
+        .start-screen p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .level-select button {
+            font-size: 24px;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #5cb85c;
+            color: white;
             font-weight: bold;
-            z-index: 150;
-            opacity: 0;
-            transition: opacity 0.3s;
+            box-shadow: 0 4px 0 #449d44;
+            transition: all 0.1s;
         }
 
-        .feedback.correct {
-            color: #32CD32;
+        .level-select button:active {
+            box-shadow: 0 2px 0 #449d44;
+            transform: translateY(2px);
         }
 
-        .feedback.wrong {
-            color: #FF4500;
+        .game-over-screen h2 {
+            font-size: 48px;
+            color: #d9534f;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
+        #final-score {
+            font-size: 36px;
+            margin: 20px 0;
         }
 
-        .feedback.show {
-            opacity: 1;
+        #restart-button {
+            font-size: 24px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #f0ad4e;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #eea236;
+            transition: all 0.1s;
         }
-    </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <!-- CLEANUP: Removed unused Tailwind CSS script -->
+        
+        #restart-button:active {
+            box-shadow: 0 2px 0 #eea236;
+            transform: translateY(2px);
+        }
+
+  </style>
  </head>
  <body>
-  <div class="game-container">
-   <div class="clouds"></div>
-   <div class="ui-panel">
-    <div class="game-stats">
-     <div class="level-display">
-      Level <span id="current-level">1</span>
-     </div>
-     <!-- MODIFICATION: Moved Lives, Question, Score into one flex row -->
-     <div class="lives-display"><span>Lives: </span>
-      <div id="lives-container">
-       <div class="heart"></div>
-       <div class="heart"></div>
-       <div class="heart"></div>
-      </div>
-     </div>
-     <div class="question-display" id="question">
-      2 × 3 = ?
-     </div>
-     <div class="score-display">
-      Score: <span id="score">0</span>
-     </div>
-    </div>
-    <!-- MODIFICATION: Question display is now inside .game-stats -->
-   </div>
-   <div class="character" id="character"></div>
-   <div class="touch-controls">
-    <div class="control-btn up" id="up-btn">
-     ↑
-    </div>
-    <div class="control-btn down" id="down-btn">
-     ↓
-    </div>
-   </div>
-   <div class="feedback" id="feedback"></div>
-   <div class="controls-info"><strong>Controls:</strong><br>
-     Touch buttons or use keyboard<br>
-     ↑/↓ Arrow Keys or W/S
-   </div>
-   <div class="game-over-screen" id="game-over-screen">
-    <div class="modal">
-     <h2>Game Over!</h2>
-     <p>Final Score: <span id="final-score">0</span></p>
-     <p>Level Reached: <span id="final-level">1</span></p><button class="btn" onclick="restartGame()">Play Again</button>
-    </div>
-   </div>
-   <!-- MODIFICATION: Removed unused level-complete-screen -->
-   <!--
-   <div class="level-complete-screen" id="level-complete-screen">
-    <div class="modal">
-     <h2>Level Complete! 🎉</h2>
-     <p>Great job! Ready for the next challenge?</p><button class="btn" onclick="nextLevel()">Next Level</button>
-    </div>
-   </div>
-   -->
-   <div class="level-select-screen" id="level-select-screen">
-    <div class="modal">
-     <h2>🎯 Multiplication Sky Runner</h2>
-     <p>Choose your difficulty level:</p>
-     <div class="level-buttons"><button class="btn level-btn" onclick="startGameAtLevel(1)">
-       <div class="level-title">
-        Level 1
-       </div>
-       <div class="level-desc">
-        1 × 1 digit
-       </div>
-       <div class="level-example">
-        Example: 3 × 7
-       </div></button> <button class="btn level-btn" onclick="startGameAtLevel(2)">
-       <div class="level-title">
-        Level 2
-       </div>
-       <div class="level-desc">
-        2 × 1 digit
-       </div>
-       <div class="level-example">
-        Example: 23 × 4
-       </div></button> <button class="btn level-btn" onclick="startGameAtLevel(3)">
-       <div class="level-title">
-        Level 3
-       </div>
-       <div class="level-desc">
-        3 × 2 digit
-       </div>
-       <div class="level-example">
-        Example: 145 × 12
-       </div></button>
-     </div>
-    </div>
-   </div>
-  </div>
-  <script>
-        let game; // <-- BUG FIX: Declare game variable in the global scope
 
+  <div class="game-container" id="game-container">
+   <div class="clouds"></div>
+
+   <!-- MODIFICATION: Updated UI Panel Structure -->
+   <div class="ui-panel">
+        <div class="stats-left">
+            <div id="level-display">Level: 1</div>
+            <div id="lives-display">Lives: 3 ❤️</div>
+        </div>
+        <div id="question">1 x 1 = ?</div>
+        <div id="score-display">Score: 0</div>
+   </div>
+   <!-- END MODIFICATION -->
+
+
+   <div class="character" id="character"></div>
+
+   <div class="start-screen" id="start-screen">
+       <h1 id="game-title">Multiplication Sky Runner</h1>
+       <p>Select your starting level:</p>
+       <div class="level-select">
+           <button onclick="startGameAtLevel(1)">Level 1 (x1-x5)</button>
+           <button onclick="startGameAtLevel(2)">Level 2 (x6-x9)</button>
+           <button onclick="startGameAtLevel(3)">Level 3 (x2-x9)</button>
+       </div>
+   </div>
+   
+   <div class="game-over-screen" id="game-over-screen" style="display: none;">
+       <h2>Game Over!</h2>
+       <div id="final-score">Final Score: 0</div>
+       <button id="restart-button" onclick="restartGame()">Play Again</button>
+   </div>
+
+  </div>
+
+  <script>
         // MODIFICATION: Add audio variables
         let correctSound;
         let wrongSound;
+        let crashSound; // MODIFICATION: Added new synth for crashing
         let audioInitialized = false;
 
         async function initializeAudio() {
             if (audioInitialized) return;
             try {
                 await Tone.start();
-                // Cheerful sound for correct answer (rising arpeggio)
-                correctSound = new Tone.Synth().toDestination();
-                // Failure sound for incorrect answer
-                wrongSound = new Tone.FMSynth({
-                    harmonicity: 2,
-                    modulationIndex: 10,
+                
+                // Sound for correct answer
+                correctSound = new Tone.PolySynth(Tone.Synth, {
+                    volume: -10,
+                    oscillator: { type: "triangle" },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 }
+                }).toDestination();
+                
+                // Sound for missing (wrong sound)
+                wrongSound = new Tone.Synth({
+                    volume: -5,
+                    oscillator: { type: "square" },
                     envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
                 }).toDestination();
+                
+                // MODIFICATION: Add a crash sound for wrong answers
+                crashSound = new Tone.NoiseSynth({
+                    noise: {
+                        type: 'white'
+                    },
+                    envelope: {
+                        attack: 0.005,
+                        decay: 0.1,
+                        sustain: 0,
+                        release: 0.1
+                    }
+                }).toDestination();
+                
                 audioInitialized = true;
                 console.log("Audio initialized.");
             } catch (e) {
-                console.error("Audio could not be initialized:", e);
+                console.error("Audio could not be started: ", e);
             }
         }
-
+        
         function playCorrectSound() {
             if (!audioInitialized) return;
-            // Play a bright, rising arpeggio
             const now = Tone.now();
-            correctSound.triggerAttackRelease("C4", "8n", now);
-            correctSound.triggerAttackRelease("E4", "8n", now + 0.1);
-            correctSound.triggerAttackRelease("G4", "8n", now + 0.2);
+            // Play a cheerful, rising arpeggio
+            correctSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", now);
         }
-
+        
         function playWrongSound() {
             if (!audioInitialized) return;
-            // Play a low, dissonant buzz
+            // Play a low "miss" buzz
             wrongSound.triggerAttackRelease("F#2", "4n");
         }
 
+        // MODIFICATION: Added new function for crash sound
+        function playCrashSound() {
+            if (!audioInitialized) return;
+            // Play a short, sharp noise burst
+            crashSound.triggerAttackRelease("8n");
+        }
+
+        // MODIFICATION: Moved game variable to global scope
+        let game;
 
         class MultiplicationGame {
-            constructor() {
-                this.level = 1;
+            constructor(startLevel = 1) {
+                this.character = document.getElementById('character');
+                this.gameContainer = document.getElementById('game-container');
+                this.questionEl = document.getElementById('question');
+                this.levelDisplay = document.getElementById('level-display');
+                this.livesDisplay = document.getElementById('lives-display');
+                this.scoreDisplay = document.getElementById('score-display');
+                
+                this.level = startLevel;
                 this.lives = 3;
                 this.score = 0;
-                this.currentQuestion = null;
-                this.correctAnswer = null;
-                this.character = document.getElementById('character');
-                this.characterPosition = 250; // Middle position
                 this.gameRunning = false;
+                
+                // MODIFICATION: Get UI panel height dynamically
+                this.uiPanel = document.querySelector('.ui-panel');
+                this.uiPanelHeight = this.uiPanel.offsetHeight;
+                
+                this.containerHeight = this.gameContainer.clientHeight;
+                this.characterHeight = this.character.clientHeight;
+                
+                // MODIFICATION: Character can move from just below UI panel to bottom
+                this.minTop = this.uiPanelHeight + 10; 
+                this.maxTop = this.containerHeight - this.characterHeight - 10;
+                
+                this.character.style.top = (this.containerHeight / 2) + 'px';
+                this.character.style.left = '20px';
+                
                 this.questionCount = 0;
                 this.questionsPerLevel = 10;
                 this.activeCandies = new Set();
@@ -610,158 +381,140 @@
                 this.questionAnswered = false; // BUG FIX: Track if answer was given
                 
                 this.initializeGame();
-                this.setupControls();
-                // Don't auto-start level - wait for level selection
+                this.bindEvents();
             }
 
             initializeGame() {
-                this.character.style.top = this.characterPosition + 'px';
-                this.updateUI();
+                this.updateStats();
+                this.gameRunning = true;
+                this.nextQuestion();
             }
 
-            setupControls() {
-                // Keyboard controls
-                document.addEventListener('keydown', (e) => {
-                    if (!this.gameRunning) return;
-                    
-                    switch(e.key) {
-                        case 'ArrowUp':
-                        case 'w':
-                        case 'W':
-                            this.moveCharacter(-60);
-                            break;
-                        case 'ArrowDown':
-                        case 's':
-                        case 'S':
-                            this.moveCharacter(60);
-                            break;
-                    }
-                });
-
-                // Touch controls
-                const upBtn = document.getElementById('up-btn');
-                const downBtn = document.getElementById('down-btn');
-
-                upBtn.addEventListener('click', () => {
-                    if (this.gameRunning) this.moveCharacter(-60);
-                });
-
-                downBtn.addEventListener('click', () => {
-                    if (this.gameRunning) this.moveCharacter(60);
-                });
-
-                // Touch events for better mobile experience
-                upBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    if (this.gameRunning) this.moveCharacter(-60);
-                });
-
-                downBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    if (this.gameRunning) this.moveCharacter(60);
-                });
+            bindEvents() {
+                // Mouse movement
+                this.gameContainer.addEventListener('mousemove', this.moveCharacter.bind(this));
+                
+                // Touch movement
+                this.gameContainer.addEventListener('touchmove', (e) => {
+                    e.preventDefault(); // Prevent scrolling
+                    this.moveCharacter(e.touches[0]);
+                }, { passive: false });
             }
 
-            moveCharacter(delta) {
-                // MODIFICATION: Changed min position from 70 to 110 for larger UI panel
-                this.characterPosition = Math.max(110, Math.min(460, this.characterPosition + delta));
-                this.character.style.top = this.characterPosition + 'px';
+            moveCharacter(e) {
+                if (!this.gameRunning) return;
+                let y = e.clientY - this.gameContainer.getBoundingClientRect().top;
+                
+                // Constrain character movement
+                if (y < this.minTop) y = this.minTop;
+                if (y > this.maxTop) y = this.maxTop;
+                
+                this.character.style.top = y + 'px';
+            }
+
+            updateStats() {
+                this.levelDisplay.textContent = `Level: ${this.level}`;
+                this.livesDisplay.textContent = `Lives: ${this.lives} ❤️`;
+                this.scoreDisplay.textContent = `Score: ${this.score}`;
             }
 
             generateQuestion() {
                 let num1, num2;
                 
-                switch(this.level) {
-                    case 1: // 1 digit × 1 digit
-                        /* MODIFICATION: Range changed from 1-9 to 2-9 */
-                        num1 = Math.floor(Math.random() * 8) + 2;
-                        num2 = Math.floor(Math.random() * 8) + 2;
-                        break;
-                    case 2: // 2 digits × 1 digit
-                        num1 = Math.floor(Math.random() * 90) + 10;
-                        /* MODIFICATION: Range changed from 1-9 to 2-9 */
-                        num2 = Math.floor(Math.random() * 8) + 2;
-                        break;
-                    case 3: // 2-3 digits × 2 digits
-                        num1 = Math.floor(Math.random() * 900) + 100;
-                        num2 = Math.floor(Math.random() * 90) + 10;
-                        break;
+                // MODIFICATION: Remove multiplication by 1
+                if (this.level === 1) {
+                    num1 = this.getRandomInt(2, 5);
+                    num2 = this.getRandomInt(2, 5);
+                } else if (this.level === 2) {
+                    num1 = this.getRandomInt(6, 9);
+                    num2 = this.getRandomInt(2, 9);
+                } else { // Level 3 and beyond
+                    num1 = this.getRandomInt(2, 9);
+                    num2 = this.getRandomInt(2, 9);
                 }
                 
-                this.correctAnswer = num1 * num2;
-                this.currentQuestion = `${num1} × ${num2} = ?`;
-                this.questionAnswered = false; // BUG FIX: Reset answer flag
+                const answer = num1 * num2;
+                this.questionEl.textContent = `${num1} x ${num2} = ?`;
                 
-                document.getElementById('question').textContent = this.currentQuestion;
-                
-                this.generateAnswerOptions();
+                return answer;
             }
 
-            generateAnswerOptions() {
-                // Clear existing options
-                document.querySelectorAll('.answer-option').forEach(option => option.remove());
+            generateAnswers(correctAnswer) {
+                let answers = new Set([correctAnswer]);
                 
-                // MODIFICATION: Changed top position from 90 to 120
-                const positions = [120, 280, 440]; // Top, middle, bottom positions
-                
-                // Generate exactly 2 wrong answers
-                const wrongAnswers = [];
-                let attempts = 0;
-                while(wrongAnswers.length < 2 && attempts < 50) {
-                    attempts++;
+                // Generate 3 wrong answers
+                while (answers.size < 4) {
                     let wrongAnswer;
-                    const variation = Math.floor(Math.random() * 20) + 1;
+                    const offset = this.getRandomInt(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+                    wrongAnswer = correctAnswer + offset;
                     
-                    if(Math.random() < 0.5) {
-                        wrongAnswer = this.correctAnswer + variation;
+                    if (wrongAnswer > 0 && wrongAnswer !== correctAnswer) {
+                        answers.add(wrongAnswer);
                     } else {
-                        wrongAnswer = Math.max(1, this.correctAnswer - variation);
-                    }
-                    
-                    if(wrongAnswer !== this.correctAnswer && !wrongAnswers.includes(wrongAnswer)) {
-                        wrongAnswers.push(wrongAnswer);
+                        // Fallback for tricky answers (e.g., answer = 1)
+                        wrongAnswer = correctAnswer + this.getRandomInt(1, 5) + 1;
+                        answers.add(wrongAnswer);
                     }
                 }
                 
-                // Ensure we have exactly 2 wrong answers, add fallbacks if needed
-                while(wrongAnswers.length < 2) {
-                    const fallback = this.correctAnswer + (wrongAnswers.length + 1) * 5;
-                    if(!wrongAnswers.includes(fallback)) {
-                        wrongAnswers.push(fallback);
+                return this.shuffleArray(Array.from(answers));
+            }
+
+            nextQuestion() {
+                if (!this.gameRunning) return;
+                
+                this.questionAnswered = false; // BUG FIX: Reset for new question
+                
+                // MODIFICATION: Handle level progression
+                if (this.questionCount >= this.questionsPerLevel) {
+                    this.questionCount = 0;
+                    if(this.level < 3) {
+                        this.level++;
+                        this.lives++; // Bonus life for leveling up
+                        this.updateStats();
                     }
+                    // No score limit, just continue at Level 3
                 }
                 
-                // ALWAYS start with the correct answer, then add wrong answers
-                const allAnswers = [this.correctAnswer, wrongAnswers[0], wrongAnswers[1]];
+                const correctAnswer = this.generateQuestion();
+                const allAnswers = this.generateAnswers(correctAnswer);
                 
-                // Shuffle the answers to randomize positions
-                for(let i = allAnswers.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
-                }
+                // Clear old answers
+                document.querySelectorAll('.answer-option').forEach(opt => opt.remove());
                 
-                // Verify we still have the correct answer after shuffling
-                if(!allAnswers.includes(this.correctAnswer)) {
-                    console.error('Correct answer missing after shuffle!');
-                    allAnswers[0] = this.correctAnswer; // Force correct answer in first position
+                // MODIFICATION: Get UI panel height dynamically
+                this.uiPanelHeight = this.uiPanel.offsetHeight;
+                const spawnAreaHeight = this.gameContainer.clientHeight - this.uiPanelHeight;
+                const spawnPadding = 50; // Padding from top/bottom
+                
+                // Create 4 positions, ensuring they don't overlap
+                let positions = [];
+                const optionHeight = 80; // height of candy
+                const spacing = (spawnAreaHeight - (4 * optionHeight) - (2 * spawnPadding)) / 3;
+                
+                for (let i = 0; i < 4; i++) {
+                    // Position from top of game container
+                    let pos = this.uiPanelHeight + spawnPadding + i * (optionHeight + spacing);
+                    positions.push(pos);
                 }
+                positions = this.shuffleArray(positions);
+                
                 
                 // Track active candies for this question
                 this.activeCandies = new Set();
                 this.activeIntervals.clear(); // MODIFICATION: Clear any old intervals
                 
                 // MODIFICATION: Add dynamic duration based on level
-                let duration = 8; // Default for level 1
-                if (this.level === 2) {
-                    duration = 10; // Slower for level 2
-                } else if (this.level === 3) {
-                    duration = 12; // Even slower for level 3
-                }
-
-                // Create exactly 3 answer options
+                let duration;
+                if(this.level === 1) duration = 8;  // 8 seconds
+                else if(this.level === 2) duration = 10; // 10 seconds
+                else duration = 12; // 12 seconds
+                
                 allAnswers.forEach((answer, index) => {
                     const option = document.createElement('div');
-                    option.className = 'answer-option';
+                    option.classList.add('answer-option');
+                    // MODIFICATION: Use emoji icon
+                    option.innerHTML = `🍬<span class="candy-number">${answer}</span>`;
                     option.textContent = answer;
                     option.style.top = positions[index] + 'px';
                     option.dataset.answer = answer;
@@ -776,13 +529,11 @@
                     this.activeCandies.add(candyId);
                     
                     // Check if this is the correct answer
-                    if(parseInt(answer) === parseInt(this.correctAnswer)) {
+                    if (answer === correctAnswer) {
                         option.classList.add('correct');
-                    } else {
-                        option.classList.add('wrong');
                     }
                     
-                    document.querySelector('.game-container').appendChild(option);
+                    this.gameContainer.appendChild(option);
                     
                     // Start collision detection immediately and check continuously
                     const collisionInterval = setInterval(() => {
@@ -798,7 +549,6 @@
                     this.activeIntervals.set(candyId, collisionInterval);
                     
                     // Remove option after animation if not eaten
-                    // MODIFICATION: Use dynamic duration
                     setTimeout(() => {
                         if(option.parentNode && this.activeCandies.has(option.dataset.candyId)) {
                             option.remove();
@@ -809,17 +559,7 @@
                     }, duration * 1000); // Use duration here
                 });
                 
-                // Debug: Log to verify correct answer is present
-                console.log('Generated answers:', allAnswers, 'Correct answer:', this.correctAnswer);
-                
-                // Check if we missed the correct answer after all candies are gone
-                // MODIFICATION: Use dynamic duration
-                setTimeout(() => {
-                    // BUG FIX: Only call handleMiss if no answer was given
-                    if(this.activeCandies.size === 0 && this.gameRunning && !this.questionAnswered) {
-                        this.handleMiss();
-                    }
-                }, (duration * 1000) + 100); // Use duration here
+                this.questionCount++;
             }
 
             checkCollision(option, collisionInterval) {
@@ -833,13 +573,12 @@
                 }
                 
                 const optionRect = option.getBoundingClientRect();
-                const characterRect = this.character.getBoundingClientRect();
+                const charRect = this.character.getBoundingClientRect();
                 
-                // Check if candy has moved off screen (left side)
+                // Check if candy is off-screen
                 if(optionRect.right < 0) {
                     // MODIFICATION: Check if the missed candy was the correct one
                     const isCorrect = option.classList.contains('correct');
--                   const candyId = option.dataset.candyId; // MODIFICATION: Already defined at top
 
                     // Only trigger miss if this is the correct candy and it's still active
                     if (isCorrect && this.gameRunning && this.activeCandies.has(candyId) && !this.questionAnswered) {
@@ -852,13 +591,8 @@
                         // Remove this candy from active set
                         this.activeCandies.delete(candyId);
                         
-                        // Remove the element
-                        if(option.parentNode) {
-                            option.remove();
-                        }
-
-                        // Call handleMiss (which plays the sound)
-                        this.handleMiss(); 
+                        // Call miss handler
+                        this.handleMiss();
                         
                         // Clear any remaining options
                         document.querySelectorAll('.answer-option').forEach(opt => {
@@ -885,26 +619,20 @@
                             option.remove();
                         }
                     }
-                    
-                    return; // Stop further collision checks for this off-screen candy
+                    return;
                 }
                 
-                // More generous collision detection
-                const collision = !(optionRect.right < characterRect.left - 10 || 
-                                  optionRect.left > characterRect.right + 10 || 
-                                  optionRect.bottom < characterRect.top - 10 || 
-                                  optionRect.top > characterRect.bottom + 10);
+                // Check for collision with character
+                const collision = !(charRect.right < optionRect.left || 
+                                  charRect.left > optionRect.right || 
+                                  charRect.bottom < optionRect.top || 
+                                  charRect.top > optionRect.bottom);
                 
                 if(collision) {
                     const answer = parseInt(option.dataset.answer);
                     const isCorrect = option.classList.contains('correct');
--                   const candyId = option.dataset.candyId; // MODIFICATION: Already defined at top
                     
                     // Mark this option as caught to prevent multiple triggers
-                    if(option.dataset.caught) return;
-                    option.dataset.caught = 'true';
-                    
-                    // Remove from active candies
                     this.activeCandies.delete(candyId);
                     
                     option.remove();
@@ -934,187 +662,144 @@
                     }
                 }
             }
-
+            
             handleCorrectAnswer() {
-                playCorrectSound(); // MODIFICATION: Play correct sound
+                playCorrectSound();
                 this.questionAnswered = true; // BUG FIX: Flag that answer was given
-                this.score += 1;
-                this.questionCount++;
-                this.showFeedback('Correct! +1 Point', 'correct');
-                this.updateUI();
-                
-                if(this.questionCount >= this.questionsPerLevel && this.level < 3) {
-                    // MODIFICATION: Auto-advance to next level
-                    this.level++;
-                    this.lives = Math.min(3, this.lives + 1); // Bonus life
-                    this.questionCount = 0; // Reset question count for new level
-                    this.showFeedback(`Level ${this.level}!`, 'correct');
-                    this.updateUI();
-                    setTimeout(() => this.generateQuestion(), 1500);
-                } else {
-                    // MODIFICATION: Just generate next question (keeps going on level 3)
-                    setTimeout(() => this.generateQuestion(), 1500);
-                }
+                this.score += (10 * this.level);
+                this.updateStats();
+                setTimeout(() => this.nextQuestion(), 500); // Wait half a sec
             }
 
             handleWrongAnswer() {
-                playWrongSound(); // MODIFICATION: Play wrong sound
+                // MODIFICATION: Changed to play crash sound
+                playCrashSound();
                 this.questionAnswered = true; // BUG FIX: Flag that answer was given
                 this.lives--;
-                this.showFeedback('Wrong! -1 Life', 'wrong');
-                this.updateUI();
+                this.updateStats();
                 
-                if(this.lives <= 0) {
-                    this.gameOver();
-                } else {
-                    setTimeout(() => this.generateQuestion(), 1500);
-                }
-            }
-
-            handleMiss() {
-                playWrongSound(); // MODIFICATION: Play wrong sound
-                this.questionAnswered = true; // Flag answer as "missed"
-                this.lives--;
-                this.showFeedback('Missed! -1 Life', 'wrong');
-                this.updateUI();
-                
-                if(this.lives <= 0) {
-                    this.gameOver();
-                } else {
-                    setTimeout(() => this.generateQuestion(), 1500);
-                }
-            }
-
-            showFeedback(text, type) {
-                const feedback = document.getElementById('feedback');
-                feedback.textContent = text;
-                feedback.className = `feedback ${type} show`;
-                
-                setTimeout(() => {
-                    feedback.classList.remove('show');
-                }, 1000);
-            }
-
-            updateUI() {
-                document.getElementById('current-level').textContent = this.level;
-                document.getElementById('score').textContent = this.score;
-                
-                const livesContainer = document.getElementById('lives-container');
-                livesContainer.innerHTML = '';
-                for(let i = 0; i < this.lives; i++) {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    livesContainer.appendChild(heart);
-                }
-            }
-
-            startLevel() {
-                this.gameRunning = true;
-                this.questionCount = 0;
-                this.generateQuestion();
-            }
-
-            completeLevel() {
-                // MODIFICATION: This function is now unused.
-                /*
-                this.gameRunning = false;
-                
-                if(this.level < 3) {
-                    document.getElementById('level-complete-screen').style.display = 'flex';
-                } else {
-                    this.gameWin();
-                }
-                */
-            }
-
-            nextLevel() {
-                // MODIFICATION: This function is now unused.
-                /*
-                this.level++;
-                this.lives = Math.min(3, this.lives + 1); // Bonus life for completing level
-                document.getElementById('level-complete-screen').style.display = 'none';
-                this.updateUI();
-                this.startLevel();
-                */
-            }
-
-            gameWin() {
-                // MODIFICATION: This function is now unused.
-                /*
-                document.getElementById('final-score').textContent = this.score;
-                document.getElementById('final-level').textContent = this.level;
-                document.querySelector('#game-over-screen h2').textContent = 'Congratulations! 🏆';
-                document.querySelector('#game-over-screen p').innerHTML = 
-                    `You completed all levels!<br>Final Score: <span id="final-score">${this.score}</span>`;
-                document.getElementById('game-over-screen').style.display = 'flex';
-                */
-            }
-
-            gameOver() {
-                this.gameRunning = false;
-                document.getElementById('final-score').textContent = this.score;
-                document.getElementById('final-level').textContent = this.level;
-                document.getElementById('game-over-screen').style.display = 'flex';
-            }
-        
-        } // <!-- BUG FIX: Added closing brace for MultiplicationGame class
-
-        function restartGame() {
-            document.getElementById('level-select-screen').style.display = 'flex';
-            document.getElementById('game-over-screen').style.display = 'none';
-        }
-
-        function nextLevel() {
-            // MODIFICATION: This function is now unused.
-            // game.nextLevel();
-        }
-
-        // MODIFICATION: Made this function async to await audio initialization
-        async function startGameAtLevel(selectedLevel) {
-            // MODIFICATION: Now 'await'ing this to ensure audio is ready
-            await initializeAudio(); 
-            
-            document.getElementById('level-select-screen').style.display = 'none';
-            game = new MultiplicationGame();
-            game.level = selectedLevel;
-            game.updateUI();
-            game.startLevel();
-        }
-
-        // Initialize level selection when page loads
-        window.addEventListener('load', () => {
-            // Show level selection screen instead of starting game immediately
-            document.getElementById('level-select-screen').style.display = 'flex';
-        });
-
-        // Initialize Element SDK
-        if (window.elementSdk) {
-            const defaultConfig = {
-                game_title: "Multiplication Sky Runner",
-                /* MODIFICATION: Removed character_emoji from config */
-                /* character_emoji: "🐰" */
-            };
-
-            window.elementSdk.init({
-                defaultConfig,
-                // BUG FIX: Correctly update game title and character emoji
-                onConfigChange: async (config) => {
-                    const gameTitle = config.game_title || defaultConfig.game_title;
-                    /* MODIFICATION: Removed character_emoji logic */
-                    /* const characterEmoji = config.character_emoji || defaultConfig.character_emoji; */
-
-                    // Update game title on level select screen
-                    const titleElement = document.querySelector('#level-select-screen h2');
-                    if (titleElement) {
-                        titleElement.innerHTML = `🎯 ${gameTitle}`;
-                    }
+                // MODIFICATION: Show crying character
+                const characterEl = document.querySelector('.character');
+                if (characterEl) {
+                    characterEl.style.backgroundImage = "url('image/crying.png')";
                     
-                    /* MODIFICATION: Removed character_emoji logic */
-                    /*
-                    // Update character emoji via CSS variable
-                    // Need to wrap the emoji in quotes for the 'content' property
-                    document.documentElement.style.setProperty('--character-emoji', `'${characterEmoji}'`);
-                    */
+                    // Revert back after 2 seconds
+                    setTimeout(() => {
+                        characterEl.style.backgroundImage = "url('image/cinnamoroll.png')";
+                    }, 2000);
+                }
+                
+                if (this.lives <= 0) {
+                    this.endGame();
+                } else {
+                    setTimeout(() => this.nextQuestion(), 500); // Wait half a sec
+                }
+            }
+            
+            handleMiss() {
+                playWrongSound(); // MODIFICATION: Play sound on miss
+                this.questionAnswered = true; // BUG FIX: Flag that answer was given
+                this.lives--;
+                this.updateStats();
+                if (this.lives <= 0) {
+                    this.endGame();
+                } else {
+                    setTimeout(() => this.nextQuestion(), 500); // Wait half a sec
+                }
+            }
+
+            endGame() {
+                this.gameRunning = false;
+                
+                // Clear all intervals
+                this.activeIntervals.forEach((interval, id) => {
+                    clearInterval(interval);
+                });
+                this.activeIntervals.clear();
+                this.activeCandies.clear();
+                
+                // Remove any remaining candies
+                document.querySelectorAll('.answer-option').forEach(opt => opt.remove());
+                
+                document.getElementById('final-score').textContent = `Final Score: ${this.score}`;
+                document.getElementById('game-over-screen').style.display = 'flex';
+            }
+
+            getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        }
+        
+        // MODIFICATION: Make async and await audio init
+        async function startGameAtLevel(level) {
+            // MODIFICATION: Await audio initialization
+            await initializeAudio();
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-over-screen').style.display = 'none';
+            
+            // Clean up old game if it exists
+            if (game) {
+                game.gameRunning = false; // Stop old game loops
+                // Clear all intervals
+                game.activeIntervals.forEach((interval, id) => {
+                    clearInterval(interval);
+                });
+                game.activeIntervals.clear();
+                game.activeCandies.clear();
+            }
+            
+            game = new MultiplicationGame(level);
+        }
+        
+        function restartGame() {
+            // Re-show start screen
+            document.getElementById('game-over-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'flex';
+            
+            // Reset character image just in case
+            const characterEl = document.querySelector('.character');
+            if (characterEl) {
+                characterEl.style.backgroundImage = "url('image/cinnamoroll.png')";
+            }
+        }
+
+        // --- Element SDK Integration ---
+        if (window.ElementSDK) {
+            const sdk = window.ElementSDK.init();
+            
+            const defaultConfig = {
+                game_title: "Multiplication Sky Runner"
+                // MODIFICATION: Removed emoji setting
+            };
+            
+            sdk.onConfigDidChange((config) => {
+                const title = config.game_title || defaultConfig.game_title;
+                document.getElementById('game-title').textContent = title;
+                // No need to update emoji
+            });
+            
+            sdk.readiness.setReady();
+            
+            // Expose capabilities
+            sdk.expose.capabilities({
+                config: {
+                    props: [
+                        {
+                            id: "game_title",
+                            label: "Game Title",
+                            type: "text"
+                        }
+                        // MODIFICATION: Removed emoji setting
+                    ]
                 },
                 mapToCapabilities: (config) => ({
                     recolorables: [],
@@ -1123,13 +808,11 @@
                     fontSizeable: undefined
                 }),
                 mapToEditPanelValues: (config) => new Map([
-                    ["game_title", config.game_title || defaultConfig.game_title],
-                    /* MODIFICATION: Removed character_emoji logic */
-                    /* ["character_emoji", config.character_emoji || defaultConfig.character_emoji] */
+                    ["game_title", config.game_title || defaultConfig.game_title]
+                    // MODIFICATION: Removed emoji setting
                 ])
             });
         }
-    </script>
-  <!-- CLEANUP: Removed malformed Cloudflare script -->
+  </script>
  </body>
 </html>
