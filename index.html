@@ -13,7 +13,10 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            /* MODIFICATION: Font changed to Arial, bold */
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            /* END MODIFICATION */
             background: linear-gradient(to bottom, #87CEEB 0%, #98D8E8 50%, #B0E0E6 100%);
             height: 100%;
             overflow: hidden;
@@ -789,16 +792,20 @@
                 this.correctSound.triggerAttackRelease('C5', '8n', Tone.now()); // Play cheerful sound
                 this.updateUI();
                 
-                if(this.questionCount >= this.questionsPerLevel) {
-                    this.completeLevel();
-                } else {
-                    setTimeout(() => this.generateQuestion(), 1500);
-                }
+                /* MODIFICATION: Added 1.5s delay for consistency before next action */
+                setTimeout(() => {
+                    if(this.questionCount >= this.questionsPerLevel) {
+                        this.completeLevel();
+                    } else {
+                        this.generateQuestion();
+                    }
+                }, 1500);
             }
 
             handleWrongAnswer() {
                 this.questionAnswered = true; 
                 this.lives--;
+                this.questionCount++; /* MODIFICATION: Added question count */
                 this.showFeedback('Wrong! -1 Life', 'wrong');
                 this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // Play crash sound
                 this.updateUI();
@@ -814,11 +821,16 @@
                     }, 1500);
                 }
                 
-                if(this.lives <= 0) {
-                    this.gameOver();
-                } else {
-                    setTimeout(() => this.generateQuestion(), 1500);
-                }
+                /* MODIFICATION: Unified logic inside 1.5s delay */
+                setTimeout(() => {
+                    if(this.lives <= 0) {
+                        this.gameOver();
+                    } else if (this.questionCount >= this.questionsPerLevel) {
+                        this.completeLevel();
+                    } else {
+                        this.generateQuestion();
+                    }
+                }, 1500);
             }
 
             handleMiss() {
@@ -826,6 +838,7 @@
 
                 this.questionAnswered = true;
                 this.lives--;
+                this.questionCount++; /* MODIFICATION: Added question count */
                 this.showFeedback('Missed! -1 Life', 'wrong');
                 this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // Play crash sound for miss
                 this.updateUI();
@@ -837,11 +850,16 @@
                     }
                 });
                 
-                if(this.lives <= 0) {
-                    this.gameOver();
-                } else {
-                    setTimeout(() => this.generateQuestion(), 1500);
-                }
+                /* MODIFICATION: Unified logic inside 1.5s delay */
+                setTimeout(() => {
+                    if(this.lives <= 0) {
+                        this.gameOver();
+                    } else if (this.questionCount >= this.questionsPerLevel) {
+                        this.completeLevel();
+                    } else {
+                        this.generateQuestion();
+                    }
+                }, 1500);
             }
 
             showFeedback(text, type) {
