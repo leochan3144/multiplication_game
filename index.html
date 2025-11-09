@@ -657,9 +657,9 @@
                 
                 // Generate 3 wrong answers
                 const wrongAnswers = [];
-                let attempts = 0;
-                while(wrongAnswers.length < 3 && attempts < 50) { // 3 wrong answers
-                    attempts++;
+                // MODIFICATION: Simplified loop. Will now run until 3 wrong answers are found.
+                // Removed 'attempts' limit and the second fallback 'while' loop.
+                while(wrongAnswers.length < 3) { 
                     let wrongAnswer;
                     const variation = Math.floor(Math.random() * 20) + 1;
                     
@@ -673,20 +673,7 @@
                         wrongAnswers.push(wrongAnswer);
                     }
                 }
-                
-                // Ensure we have 3 wrong answers
-                while(wrongAnswers.length < 3) {
-                    const fallback = this.correctAnswer + (wrongAnswers.length + 1) * 5;
-                    if(!wrongAnswers.includes(fallback) && fallback !== this.correctAnswer) {
-                        wrongAnswers.push(fallback);
-                    } else {
-                        // fallback if first one fails
-                        const fallback2 = this.correctAnswer + 10 + wrongAnswers.length;
-                         if(!wrongAnswers.includes(fallback2) && fallback2 !== this.correctAnswer) {
-                            wrongAnswers.push(fallback2);
-                         }
-                    }
-                }
+                // END MODIFICATION
                 
                 // 4 total answers.
                 // This logic ensures the correct answer is ALWAYS included.
@@ -698,8 +685,9 @@
                     [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
                 }
                 
-                // This check is a safeguard, but with the above logic, it should always be true.
-                if(!allAnswers.includes(this.correctAnswer)) {
+                // MODIFICATION: Add Number() conversion for a more robust check
+                if(!allAnswers.map(Number).includes(Number(this.correctAnswer))) {
+                // END MODIFICATION
                     console.error('Correct answer missing after shuffle!');
                     allAnswers[0] = this.correctAnswer; // Force it in if something went wrong
                 }
@@ -718,9 +706,9 @@
                     
                     this.activeCandies.add(candyId);
                     
-                    // MODIFICATION: Simplified the 'correct' class check
-                    // Both 'answer' and 'this.correctAnswer' are already numbers.
-                    if(answer === this.correctAnswer) {
+                    // MODIFICATION: Added Number() conversions for a more robust check
+                    if(Number(answer) === Number(this.correctAnswer)) {
+                    // END MODIFICATION
                         option.classList.add('correct');
                         correctIsPresent = true; // Mark as found
                     } else {
