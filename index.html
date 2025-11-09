@@ -185,7 +185,13 @@
 
         .answer-option {
             position: absolute;
-            right: -600px;
+            /* MODIFICATION: Removed 'right: -600px;' */
+            /* right: -600px; */ 
+            
+            /* MODIFICATION: Set initial position using 'left' and 'transform' */
+            left: 100%; /* Start just off-screen to the right */
+            transform: translateX(600px); /* Add the 600px buffer */
+
             width: 80px;
             height: 80px;
             background: radial-gradient(circle at 30% 30%, #FFE4E1, #FFB6C1, #FF69B4);
@@ -201,9 +207,9 @@
             color: black;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.3);
+            /* MODIFICATION: Kept animation properties, but the @keyframe is now different */
             animation: moveLeft 8s linear, candyShine 2s ease-in-out infinite alternate;
-            /* * BUG FIX: Removed 'position: relative;' which was overriding 
-             * 'position: absolute;' and breaking the animation.
+            /* * BUG FIX: Removed 'position: relative;' which was overriding
              * Also set animation 'infinite' to just 'linear' for moveLeft
              * as it should only run once per candy.
             */
@@ -231,9 +237,10 @@
             transform: rotate(-20deg);
         }
 
+        /* MODIFICATION: Removed background and border color changes */
         .answer-option.correct {
-            background: radial-gradient(circle at 30% 30%, #E6FFE6, #90EE90, #32CD32);
-            border-color: #228B22;
+            /* background: radial-gradient(circle at 30% 30%, #E6FFE6, #90EE90, #32CD32); */
+            /* border-color: #228B22; */
         }
 
         .answer-option.correct::before {
@@ -241,9 +248,10 @@
             /* content: '🍬'; */
         }
 
+        /* MODIFICATION: Removed background and border color changes */
         .answer-option.wrong {
-            background: radial-gradient(circle at 30% 30%, #FFE4B5, #FFD700, #FFA500);
-            border-color: #FF8C00;
+            /* background: radial-gradient(circle at 30% 30%, #FFE4B5, #FFD700, #FFA500); */
+            /* border-color: #FF8C00; */
         }
 
         .answer-option.wrong::before {
@@ -256,9 +264,20 @@
             100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 4px 12px rgba(255, 255, 255, 0.5); }
         }
 
+        /* MODIFICATION: Changed animation to use 'transform' for smoothness */
         @keyframes moveLeft {
-            0% { right: -600px; }
-            100% { right: 100%; }
+            0% {
+                /* Start at left: 100%, transform: translateX(600px) */
+                transform: translateX(600px);
+            }
+            100% {
+                /* Move left so it's off-screen.
+                  (100vw = viewport width)
+                  (80px = self width)
+                  This moves the candy from (100vw + 600px) to (-80px)
+                */
+                transform: translateX(calc(-100vw - 80px - 600px));
+            }
         }
 
         .game-over-screen, .level-complete-screen, .level-select-screen {
@@ -802,7 +821,46 @@
                 
                 // Check if candy has moved off screen (left side)
                 if(optionRect.right < 0) {
-                    return; // Let it naturally disappear, don't clear interval here
+                    // MODIFICATION: Check if the missed candy was the correct one
+                    const isCorrect = option.classList.contains('correct');
+                    const candyId = option.dataset.candyId;
+
+                    // Only trigger miss if this is the correct candy and it's still active
+                    if (isCorrect && this.gameRunning && this.activeCandies.has(candyId) && !this.questionAnswered) {
+                        // This is a "miss".
+                        
+                        // Clear this interval
+                        clearInterval(collisionInterval);
+                        
+                        // Remove this candy from active set
+                        this.activeCandies.delete(candyId);
+                        
+                        // Remove the element
+                        if(option.parentNode) {
+                            option.remove();
+                        }
+
+                        // Call handleMiss (which plays the sound)
+                        this.handleMiss(); 
+                        
+                        // Clear any remaining options
+                        document.querySelectorAll('.answer-option').forEach(opt => {
+                            if(this.activeCandies.has(opt.dataset.candyId)) {
+                                this.activeCandies.delete(opt.dataset.candyId);
+                                if (opt.parentNode) opt.remove();
+                            }
+                        });
+
+                    } else if (this.activeCandies.has(candyId)) {
+                        // It's a wrong candy that went off-screen. Just clean it up.
+                        clearInterval(collisionInterval);
+                        this.activeCandies.delete(candyId);
+                        if(option.parentNode) {
+                            option.remove();
+                        }
+                    }
+                    
+                    return; // Stop further collision checks for this off-screen candy
                 }
                 
                 // More generous collision detection
