@@ -963,8 +963,11 @@
             // game.nextLevel();
         }
 
-        function startGameAtLevel(selectedLevel) {
-            initializeAudio(); // MODIFICATION: Initialize audio on user click
+        // MODIFICATION: Made this function async to await audio initialization
+        async function startGameAtLevel(selectedLevel) {
+            // MODIFICATION: Now 'await'ing this to ensure audio is ready
+            await initializeAudio(); 
+            
             document.getElementById('level-select-screen').style.display = 'none';
             game = new MultiplicationGame();
             game.level = selectedLevel;
