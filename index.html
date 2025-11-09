@@ -602,36 +602,43 @@
 
             generateQuestion() {
                 let num1, num2;
+                let isValid = false;
                 
-                switch(this.level) {
-                    case 1: // 1 digit × 1 digit (No 1s)
-                        // MODIFICATION: Range is 2-9
-                        num1 = Math.floor(Math.random() * 8) + 2; 
-                        num2 = Math.floor(Math.random() * 8) + 2;
-                        break;
-                    case 2: // 2 digits × 1 digit (No 1s for single digit)
-                        num1 = Math.floor(Math.random() * 90) + 10;
-                        // MODIFICATION: Range is 2-9
-                        num2 = Math.floor(Math.random() * 8) + 2;
-                        break;
-                    case 3: // 2-3 digits × 2 digits
-                        num1 = Math.floor(Math.random() * 900) + 100;
-                        num2 = Math.floor(Math.random() * 90) + 10;
-                        break;
+                // --- MODIFICATION: Loop until a valid question is generated ---
+                while(!isValid) {
+                    switch(this.level) {
+                        case 1: // 1 digit × 1 digit (No 1s)
+                            // MODIFICATION: Range is 2-9
+                            num1 = Math.floor(Math.random() * 8) + 2; 
+                            num2 = Math.floor(Math.random() * 8) + 2;
+                            break;
+                        case 2: // 2 digits × 1 digit (No 1s for single digit)
+                            num1 = Math.floor(Math.random() * 90) + 10;
+                            // MODIFICATION: Range is 2-9
+                            num2 = Math.floor(Math.random() * 8) + 2;
+                            break;
+                        case 3: // 2-3 digits × 2 digits
+                            num1 = Math.floor(Math.random() * 900) + 100;
+                            num2 = Math.floor(Math.random() * 90) + 10;
+                            break;
+                        default: // Fallback for safety
+                            num1 = 2;
+                            num2 = 2;
+                    }
+                    
+                    this.correctAnswer = num1 * num2;
+                    this.currentQuestion = `${num1} × ${num2} = ?`;
+
+                    // Check if the answer is a valid number
+                    if (this.correctAnswer !== null && this.correctAnswer !== undefined && !isNaN(this.correctAnswer)) {
+                        isValid = true;
+                    } else {
+                        console.error("CRITICAL BUG: correct_answer is invalid! Regenerating.", num1, num2, this.correctAnswer);
+                        // Loop will repeat
+                    }
                 }
+                // --- END MODIFICATION ---
                 
-                this.correctAnswer = num1 * num2;
-                this.currentQuestion = `${num1} × ${num2} = ?`;
-
-                // NEW: Add safeguard check for NaN
-                if (isNaN(this.correctAnswer)) {
-                    console.error("CRITICAL BUG: correct_answer is NaN!", num1, num2);
-                    // Force a restart of the question generation
-                    this.generateQuestion();
-                    return; // Stop this faulty run
-                }
-                // END NEW
-
                 this.questionAnswered = false; 
                 
                 document.getElementById('question').textContent = this.currentQuestion;
@@ -643,24 +650,9 @@
                 // Clear existing options
                 document.querySelectorAll('.answer-option').forEach(option => option.remove());
                 
-                // --- NEW AGGRESSIVE SAFEGUARD ---
-                // Check the correct answer *before* doing anything else.
-                // If it's invalid, stop and regenerate the entire question.
-                if (this.correctAnswer === null || this.correctAnswer === undefined || isNaN(this.correctAnswer)) {
-                    console.error("CRITICAL BUG DETECTED in generateAnswerOptions:", this.correctAnswer);
-                    console.log("Forcing question regeneration.");
-                    // Set a flag to avoid infinite loops
-                    if (!this.regenerating) {
-                        this.regenerating = true;
-                        // Use setTimeout to avoid potential stack overflow if bug is rapid
-                        setTimeout(() => {
-                            this.generateQuestion(); // This will re-call this function
-                            this.regenerating = false;
-                        }, 0);
-                    }
-                    return; // Stop execution of this faulty run
-                }
-                // --- END NEW SAFEGUARD ---
+                // --- REMOVED AGGRESSIVE SAFEGUARD ---
+                // It is no longer needed because generateQuestion() now guarantees a valid answer.
+                // --- END REMOVAL ---
 
                 // 4 positions
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
