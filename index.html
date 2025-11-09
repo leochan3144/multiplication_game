@@ -500,9 +500,10 @@
                 this.characterPosition = 250; // Middle position
                 this.gameRunning = false;
                 this.questionCount = 0;
-                this.questionsPerLevel = 30;
+                this.questionsPerLevel = 10;
                 this.activeCandies = new Set();
                 this.questionAnswered = false;
+                this.regenerating = false; // Add this
                 
                 // Audio synthesizers
                 this.correctSound = null;
@@ -642,6 +643,25 @@
                 // Clear existing options
                 document.querySelectorAll('.answer-option').forEach(option => option.remove());
                 
+                // --- NEW AGGRESSIVE SAFEGUARD ---
+                // Check the correct answer *before* doing anything else.
+                // If it's invalid, stop and regenerate the entire question.
+                if (this.correctAnswer === null || this.correctAnswer === undefined || isNaN(this.correctAnswer)) {
+                    console.error("CRITICAL BUG DETECTED in generateAnswerOptions:", this.correctAnswer);
+                    console.log("Forcing question regeneration.");
+                    // Set a flag to avoid infinite loops
+                    if (!this.regenerating) {
+                        this.regenerating = true;
+                        // Use setTimeout to avoid potential stack overflow if bug is rapid
+                        setTimeout(() => {
+                            this.generateQuestion(); // This will re-call this function
+                            this.regenerating = false;
+                        }, 0);
+                    }
+                    return; // Stop execution of this faulty run
+                }
+                // --- END NEW SAFEGUARD ---
+
                 // 4 positions
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight + 20;
