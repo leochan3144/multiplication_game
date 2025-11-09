@@ -6,6 +6,8 @@
   <title>Multiplication Sky Runner</title>
   <!-- MODIFICATION: Correct SDK script -->
   <script src="/_sdk/element_sdk.js"></script>
+  <!-- MODIFICATION: Add Tone.js for audio -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
   <style>
         body {
             box-sizing: border-box;
@@ -174,7 +176,7 @@
 
         .answer-option {
             position: absolute;
-            right: -600px; /* Start position for transform */
+            right: -80px; /* MODIFICATION: Start just off-screen */
             width: 80px;
             height: 80px;
             
@@ -229,7 +231,7 @@
                 transform: translateX(0); 
             }
             100% { 
-                transform: translateX(calc(-100vw - 600px)); 
+                transform: translateX(calc(-100vw - 80px)); /* MODIFICATION: Adjust end position */
             }
         }
 
@@ -499,6 +501,71 @@
    </div>
   </div>
   <script>
+        // MODIFICATION: Add audio variables
+        let correctSound;
+        let wrongSound;
+        let crashSound;
+        let audioInitialized = false;
+
+        async function initializeAudio() {
+            if (audioInitialized) return;
+            try {
+                await Tone.start();
+                
+                // Sound for correct answer
+                correctSound = new Tone.PolySynth(Tone.Synth, {
+                    volume: -10,
+                    oscillator: { type: "triangle" },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 }
+                }).toDestination();
+                
+                // Sound for missing (unlucky sound)
+                wrongSound = new Tone.Synth({
+                    volume: -5,
+                    oscillator: { type: "square" },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+                }).toDestination();
+                
+                // Sound for crashing into wrong answer
+                crashSound = new Tone.NoiseSynth({
+                    noise: {
+                        type: 'white'
+                    },
+                    envelope: {
+                        attack: 0.005,
+                        decay: 0.1,
+                        sustain: 0,
+                        release: 0.1
+                    }
+                }).toDestination();
+                
+                audioInitialized = true;
+                console.log("Audio initialized.");
+            } catch (e) {
+                console.error("Audio could not be started: ", e);
+            }
+        }
+        
+        function playCorrectSound() {
+            if (!audioInitialized) return;
+            const now = Tone.now();
+            // Play a cheerful, rising arpeggio
+            correctSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", now);
+        }
+        
+        function playWrongSound() {
+            if (!audioInitialized) return;
+            // Play a low "miss" buzz
+            wrongSound.triggerAttackRelease("F#2", "4n");
+        }
+
+        function playCrashSound() {
+            if (!audioInitialized) return;
+            // Play a short, sharp noise burst
+            crashSound.triggerAttackRelease("8n");
+        }
+        // END MODIFICATION
+
         class MultiplicationGame {
             constructor() {
                 this.level = 1;
@@ -755,6 +822,7 @@
                 this.score += 1;
                 this.questionCount++;
                 this.showFeedback('Correct! +1 Point', 'correct');
+                playCorrectSound(); // MODIFICATION: Play sound
                 this.updateUI();
                 
                 if(this.questionCount >= this.questionsPerLevel) {
@@ -768,6 +836,7 @@
                 this.questionAnswered = true; 
                 this.lives--;
                 this.showFeedback('Wrong! -1 Life', 'wrong');
+                playCrashSound(); // MODIFICATION: Play sound
                 this.updateUI();
                 
                 const characterEl = document.getElementById('character');
@@ -792,6 +861,7 @@
                 this.questionAnswered = true;
                 this.lives--;
                 this.showFeedback('Missed! -1 Life', 'wrong');
+                playWrongSound(); // MODIFICATION: Play sound
                 this.updateUI();
                 
                 document.querySelectorAll('.answer-option').forEach(opt => {
@@ -908,7 +978,9 @@
             game.nextLevel();
         }
 
-        function startGameAtLevel(selectedLevel) {
+        // MODIFICATION: Make async and await audio
+        async function startGameAtLevel(selectedLevel) {
+            await initializeAudio(); // MODIFICATION: Wait for audio
             document.getElementById('level-select-screen').style.display = 'none';
             game = new MultiplicationGame();
             game.level = selectedLevel;
