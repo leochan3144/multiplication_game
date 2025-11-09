@@ -513,8 +513,8 @@
                 allAnswers.forEach((answer, index) => {
                     const option = document.createElement('div');
                     option.classList.add('answer-option');
-                    // MODIFICATION: Use emoji icon
-                    option.innerHTML = `🍬<span class="candy-number">${answer}</span>`;
+                    // MODIFICATION: Removed conflicting/old innerHTML line.
+                    // option.innerHTML = `🍬<span class="candy-number">${answer}</span>`;
                     option.textContent = answer;
                     option.style.top = positions[index] + 'px';
                     option.dataset.answer = answer;
