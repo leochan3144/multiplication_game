@@ -589,9 +589,9 @@
         function playWrongSound() {
             if (!audioInitialized) return;
             // Play a low, dissonant buzz
-            wrongSound.triggerAttackRelease("G4", "4n");
-          wrongSound.triggerAttackRelease("E4", "4n");
-          wrongSound.triggerAttackRelease("C4", "4n");
+            wrongSound.triggerAttackRelease("G4", "4n",now);
+          wrongSound.triggerAttackRelease("E4", "4n",now+0.1);
+          wrongSound.triggerAttackRelease("C4", "4n",now+0.2);
         }
 
 
