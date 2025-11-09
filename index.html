@@ -606,6 +606,7 @@
                 this.questionCount = 0;
                 this.questionsPerLevel = 10;
                 this.activeCandies = new Set();
+                this.activeIntervals = new Map(); // MODIFICATION: Track active intervals
                 this.questionAnswered = false; // BUG FIX: Track if answer was given
                 
                 this.initializeGame();
@@ -747,6 +748,7 @@
                 
                 // Track active candies for this question
                 this.activeCandies = new Set();
+                this.activeIntervals.clear(); // MODIFICATION: Clear any old intervals
                 
                 // MODIFICATION: Add dynamic duration based on level
                 let duration = 8; // Default for level 1
@@ -763,13 +765,15 @@
                     option.textContent = answer;
                     option.style.top = positions[index] + 'px';
                     option.dataset.answer = answer;
-                    option.dataset.candyId = `candy_${Date.now()}_${index}`;
+                    // MODIFICATION: Get candyId earlier to use for interval map
+                    const candyId = `candy_${Date.now()}_${index}`;
+                    option.dataset.candyId = candyId;
                     
                     // MODIFICATION: Set animation duration dynamically
                     option.style.animationDuration = `${duration}s, 2s`;
 
                     // Add to active candies set
-                    this.activeCandies.add(option.dataset.candyId);
+                    this.activeCandies.add(candyId);
                     
                     // Check if this is the correct answer
                     if(parseInt(answer) === parseInt(this.correctAnswer)) {
@@ -784,10 +788,14 @@
                     const collisionInterval = setInterval(() => {
                         if(!option.parentNode || !this.gameRunning || !this.activeCandies.has(option.dataset.candyId)) {
                             clearInterval(collisionInterval);
+                            this.activeIntervals.delete(candyId); // MODIFICATION: Clean up map
                             return;
                         }
                         this.checkCollision(option, collisionInterval);
                     }, 50);
+
+                    // MODIFICATION: Store interval
+                    this.activeIntervals.set(candyId, collisionInterval);
                     
                     // Remove option after animation if not eaten
                     // MODIFICATION: Use dynamic duration
@@ -796,6 +804,7 @@
                             option.remove();
                             this.activeCandies.delete(option.dataset.candyId);
                             clearInterval(collisionInterval);
+                            this.activeIntervals.delete(candyId); // MODIFICATION: Clean up map
                         }
                     }, duration * 1000); // Use duration here
                 });
@@ -814,7 +823,14 @@
             }
 
             checkCollision(option, collisionInterval) {
-                if(!this.gameRunning || !option.parentNode || !this.activeCandies.has(option.dataset.candyId)) return;
+                // MODIFICATION: Get candyId at the top
+                const candyId = option.dataset.candyId;
+                // MODIFICATION: Add interval clearing to guard clause
+                if(!this.gameRunning || !option.parentNode || !this.activeCandies.has(candyId)) {
+                    clearInterval(collisionInterval);
+                    this.activeIntervals.delete(candyId);
+                    return;
+                }
                 
                 const optionRect = option.getBoundingClientRect();
                 const characterRect = this.character.getBoundingClientRect();
@@ -823,7 +839,7 @@
                 if(optionRect.right < 0) {
                     // MODIFICATION: Check if the missed candy was the correct one
                     const isCorrect = option.classList.contains('correct');
-                    const candyId = option.dataset.candyId;
+-                   const candyId = option.dataset.candyId; // MODIFICATION: Already defined at top
 
                     // Only trigger miss if this is the correct candy and it's still active
                     if (isCorrect && this.gameRunning && this.activeCandies.has(candyId) && !this.questionAnswered) {
@@ -831,6 +847,7 @@
                         
                         // Clear this interval
                         clearInterval(collisionInterval);
+                        this.activeIntervals.delete(candyId); // MODIFICATION: Clean up map
                         
                         // Remove this candy from active set
                         this.activeCandies.delete(candyId);
@@ -845,15 +862,24 @@
                         
                         // Clear any remaining options
                         document.querySelectorAll('.answer-option').forEach(opt => {
-                            if(this.activeCandies.has(opt.dataset.candyId)) {
-                                this.activeCandies.delete(opt.dataset.candyId);
+                            // MODIFICATION: Clear intervals for other candies
+                            const optId = opt.dataset.candyId;
+                            if(this.activeCandies.has(optId)) {
+                                this.activeCandies.delete(optId);
                                 if (opt.parentNode) opt.remove();
+                                
+                                const intervalToClear = this.activeIntervals.get(optId);
+                                if (intervalToClear) {
+                                    clearInterval(intervalToClear);
+                                    this.activeIntervals.delete(optId);
+                                }
                             }
                         });
 
                     } else if (this.activeCandies.has(candyId)) {
                         // It's a wrong candy that went off-screen. Just clean it up.
                         clearInterval(collisionInterval);
+                        this.activeIntervals.delete(candyId); // MODIFICATION: Clean up map
                         this.activeCandies.delete(candyId);
                         if(option.parentNode) {
                             option.remove();
@@ -872,7 +898,7 @@
                 if(collision) {
                     const answer = parseInt(option.dataset.answer);
                     const isCorrect = option.classList.contains('correct');
-                    const candyId = option.dataset.candyId;
+-                   const candyId = option.dataset.candyId; // MODIFICATION: Already defined at top
                     
                     // Mark this option as caught to prevent multiple triggers
                     if(option.dataset.caught) return;
@@ -883,12 +909,21 @@
                     
                     option.remove();
                     clearInterval(collisionInterval);
+                    this.activeIntervals.delete(candyId); // MODIFICATION: Clean up map
                     
                     // Clear any remaining options since we caught one
                     document.querySelectorAll('.answer-option').forEach(opt => {
-                        if(opt !== option && this.activeCandies.has(opt.dataset.candyId)) {
-                            this.activeCandies.delete(opt.dataset.candyId);
+                        // MODIFICATION: Clear intervals for other candies
+                        const optId = opt.dataset.candyId;
+                        if(opt !== option && this.activeCandies.has(optId)) {
+                            this.activeCandies.delete(optId);
                             opt.remove();
+
+                            const intervalToClear = this.activeIntervals.get(optId);
+                            if (intervalToClear) {
+                                clearInterval(intervalToClear);
+                                this.activeIntervals.delete(optId);
+                            }
                         }
                     });
                     
