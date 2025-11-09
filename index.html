@@ -500,7 +500,7 @@
                 this.characterPosition = 250; // Middle position
                 this.gameRunning = false;
                 this.questionCount = 0;
-                this.questionsPerLevel = 10;
+                this.questionsPerLevel = 30;
                 this.activeCandies = new Set();
                 this.questionAnswered = false;
                 
@@ -621,6 +621,16 @@
                 
                 this.correctAnswer = num1 * num2;
                 this.currentQuestion = `${num1} × ${num2} = ?`;
+
+                // NEW: Add safeguard check for NaN
+                if (isNaN(this.correctAnswer)) {
+                    console.error("CRITICAL BUG: correct_answer is NaN!", num1, num2);
+                    // Force a restart of the question generation
+                    this.generateQuestion();
+                    return; // Stop this faulty run
+                }
+                // END NEW
+
                 this.questionAnswered = false; 
                 
                 document.getElementById('question').textContent = this.currentQuestion;
@@ -695,6 +705,7 @@
                 }
                 
                 this.activeCandies = new Set();
+                let correctIsPresent = false; // Add a new check
                 
                 allAnswers.forEach((answer, index) => {
                     const option = document.createElement('div');
@@ -711,6 +722,7 @@
                     // Both 'answer' and 'this.correctAnswer' are already numbers.
                     if(answer === this.correctAnswer) {
                         option.classList.add('correct');
+                        correctIsPresent = true; // Mark as found
                     } else {
                         option.classList.add('wrong');
                     }
@@ -737,6 +749,13 @@
                         }
                     }, 8000);
                 });
+                
+                // Add a final check
+                if (!correctIsPresent) {
+                    console.error("CRITICAL BUG: No candy was marked as correct.", this.correctAnswer, allAnswers);
+                    // This would be a symptom of (answer === this.correctAnswer) failing, e.g., if this.correctAnswer is NaN.
+                    console.log(`Current level: ${this.level}, Question: ${this.currentQuestion}, Correct Answer: ${this.correctAnswer}`);
+                }
                 
                 console.log('Generated answers:', allAnswers, 'Correct answer:', this.correctAnswer);
             }
