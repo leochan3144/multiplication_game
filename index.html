@@ -7,7 +7,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
   <style>
         :root {
-            --character-emoji: '🐰';
+            /* MODIFICATION: Removed --character-emoji variable */
+            /* --character-emoji: '🐰'; */
         }
 
         body {
@@ -155,21 +156,32 @@
             left: 80px;
             width: 60px;
             height: 60px;
-            background: #FFB6C1;
-            border-radius: 50%;
-            border: 3px solid #FF69B4;
+            /* MODIFICATION: Removed background color and border */
+            /* background: #FFB6C1; */
+            /* border-radius: 50%; */
+            /* border: 3px solid #FF69B4; */
             transition: top 0.1s ease;
             z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
+            /* MODIFICATION: Removed flex properties */
+            /* display: flex; */
+            /* align-items: center; */
+            /* justify-content: center; */
+            /* font-size: 30px; */
+
+            /* MODIFICATION: Changed path to use a local image */
+            background-image: url('image/cinnamoroll.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
+        /* MODIFICATION: Removed ::before pseudo-element that showed the emoji */
+        /*
         .character::before {
             content: var(--character-emoji);
             font-size: 40px;
         }
+        */
 
         .answer-option {
             position: absolute;
@@ -985,7 +997,8 @@
         if (window.elementSdk) {
             const defaultConfig = {
                 game_title: "Multiplication Sky Runner",
-                character_emoji: "🐰"
+                /* MODIFICATION: Removed character_emoji from config */
+                /* character_emoji: "🐰" */
             };
 
             window.elementSdk.init({
@@ -993,7 +1006,8 @@
                 // BUG FIX: Correctly update game title and character emoji
                 onConfigChange: async (config) => {
                     const gameTitle = config.game_title || defaultConfig.game_title;
-                    const characterEmoji = config.character_emoji || defaultConfig.character_emoji;
+                    /* MODIFICATION: Removed character_emoji logic */
+                    /* const characterEmoji = config.character_emoji || defaultConfig.character_emoji; */
 
                     // Update game title on level select screen
                     const titleElement = document.querySelector('#level-select-screen h2');
@@ -1001,9 +1015,12 @@
                         titleElement.innerHTML = `🎯 ${gameTitle}`;
                     }
                     
+                    /* MODIFICATION: Removed character_emoji logic */
+                    /*
                     // Update character emoji via CSS variable
                     // Need to wrap the emoji in quotes for the 'content' property
                     document.documentElement.style.setProperty('--character-emoji', `'${characterEmoji}'`);
+                    */
                 },
                 mapToCapabilities: (config) => ({
                     recolorables: [],
@@ -1013,7 +1030,8 @@
                 }),
                 mapToEditPanelValues: (config) => new Map([
                     ["game_title", config.game_title || defaultConfig.game_title],
-                    ["character_emoji", config.character_emoji || defaultConfig.character_emoji]
+                    /* MODIFICATION: Removed character_emoji logic */
+                    /* ["character_emoji", config.character_emoji || defaultConfig.character_emoji] */
                 ])
             });
         }
