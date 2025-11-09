@@ -704,7 +704,9 @@
                     
                     this.activeCandies.add(candyId);
                     
-                    if(parseInt(answer) === parseInt(this.correctAnswer)) {
+                    // MODIFICATION: Simplified the 'correct' class check
+                    // Both 'answer' and 'this.correctAnswer' are already numbers.
+                    if(answer === this.correctAnswer) {
                         option.classList.add('correct');
                     } else {
                         option.classList.add('wrong');
