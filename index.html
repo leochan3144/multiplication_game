@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multiplication Sky Runner</title>
-  <!-- NEW: Added Tone.js for sound effects -->
+  <!-- Added Tone.js for sound effects -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
-  <!-- MODIFICATION: Correct SDK script -->
+  <!-- Correct SDK script -->
   <script src="/_sdk/element_sdk.js"></script>
   <style>
         body {
@@ -48,7 +48,7 @@
             100% { transform: translateX(-200px); }
         }
 
-        /* MODIFICATION: Updated UI Panel */
+        /* Updated UI Panel */
         .ui-panel {
             position: absolute;
             top: 10px;
@@ -62,7 +62,7 @@
             /* Removed fixed height */
         }
 
-        /* MODIFICATION: game-stats is now the main flex container */
+        /* game-stats is now the main flex container */
         .game-stats {
             display: flex;
             justify-content: space-between;
@@ -146,7 +146,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* MODIFICATION: Question is now center element */
+        /* Question is now center element */
         .question-display {
             text-align: center;
             font-size: 28px; /* Doubled size */
@@ -160,13 +160,13 @@
             margin: 0 20px; /* Adds spacing */
         }
 
-        /* MODIFICATION: Cinnamoroll character style */
+        /* Cinnamoroll character style */
         .character {
             position: absolute;
             left: 80px;
             width: 80px;  /* Increased size for image */
             height: 80px; /* Increased size for image */
-            background-image: url('https://placehold.co/80x80/ffffff/ffffff?text=.'); /* Cinnamoroll placeholder */
+            /* MODIFICATION: Removed placeholder background-image */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -176,11 +176,11 @@
 
        .answer-option {
             position: absolute;
-            right: -1200px; /* MODIFICATION: Start position is now the right edge */
+            right: -1200px; /* Start position is now the right edge */
             width: 80px;
             height: 80px;
             
-            /* MODIFICATION: Single pink color style */
+            /* Single pink color style */
             background: #FFB6C1;
             border: 3px solid #FF69B4;
             /* END MODIFICATION */
@@ -189,12 +189,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px; /* MODIFICATION: Doubled size */
+            font-size: 28px; /* Doubled size */
             font-weight: bold;
             color: black; 
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            /* MODIFICATION: Added transform animation */
+            /* Added transform animation */
             animation: moveLeft 8s linear infinite, candyShine 2s ease-in-out infinite alternate;
             position: relative;
         }
@@ -225,7 +225,7 @@
             100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 4px 12px rgba(255, 255, 255, 0.5); }
         }
 
-        /* MODIFICATION: Use transform for smooth animation */
+        /* Use transform for smooth animation */
         @keyframes moveLeft {
             0% { 
                 transform: translateX(0); 
@@ -417,7 +417,7 @@
   <div class="game-container">
    <div class="clouds"></div>
 
-   <!-- MODIFICATION: Updated UI Panel Layout -->
+   <!-- Updated UI Panel Layout -->
    <div class="ui-panel">
     <div class="game-stats">
         <div class="stats-left">
@@ -437,8 +437,8 @@
    </div>
    <!-- END MODIFICATION -->
 
-   <!-- NOTE: Using a placeholder for Cinnamoroll image. -->
-   <div class="character" id="character" style="background-image: url('https://placehold.co/80x80/E0F7FA/000000?text=Player&font=Comic+Sans+MS');"></div>
+   <!-- MODIFICATION: Using image/cinnamoroll.png from user's folder -->
+   <div class="character" id="character" style="background-image: url('image/cinnamoroll.png');"></div>
    <div class="touch-controls">
     <div class="control-btn up" id="up-btn">
      ↑
@@ -517,18 +517,20 @@
                 this.activeCandies = new Set();
                 this.questionAnswered = false;
                 
-                // NEW: Audio synthesizers
+                // Audio synthesizers
                 this.correctSound = null;
                 this.wrongSound = null;
-                this.characterCryingUrl = 'https://placehold.co/80x80/FFCDD2/B71C1C?text=Sad&font=Comic+Sans+MS';
-                this.characterNormalUrl = 'https://placehold.co/80x80/E0F7FA/000000?text=Player&font=Comic+Sans+MS';
+
+                // MODIFICATION: Set image paths to user's "image" folder
+                this.characterCryingUrl = 'image/cinnamoroll_crying.png';
+                this.characterNormalUrl = 'image/cinnamoroll.png';
                 
                 this.initializeGame();
                 this.setupControls();
-                this.initializeAudio(); // NEW
+                this.initializeAudio();
             }
 
-            // NEW: Initialize audio components
+            // Initialize audio components
             initializeAudio() {
                 try {
                     // "Cheerful" sound
@@ -601,7 +603,7 @@
             }
 
             moveCharacter(delta) {
-                // MODIFICATION: Update vertical constraints to account for larger UI panel
+                // Update vertical constraints to account for larger UI panel
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight + 20; // Just below panel
                 const maxTop = document.querySelector('.game-container').clientHeight - 100; // 80px char + 20px padding
@@ -614,13 +616,15 @@
                 let num1, num2;
                 
                 switch(this.level) {
-                    case 1: // 1 digit × 1 digit
-                        num1 = Math.floor(Math.random() * 9) + 1;
-                        num2 = Math.floor(Math.random() * 9) + 1;
+                    case 1: // 1 digit × 1 digit (No 1s)
+                        // MODIFICATION: Range is 2-9
+                        num1 = Math.floor(Math.random() * 8) + 2; 
+                        num2 = Math.floor(Math.random() * 8) + 2;
                         break;
-                    case 2: // 2 digits × 1 digit
+                    case 2: // 2 digits × 1 digit (No 1s for single digit)
                         num1 = Math.floor(Math.random() * 90) + 10;
-                        num2 = Math.floor(Math.random() * 9) + 1;
+                        // MODIFICATION: Range is 2-9
+                        num2 = Math.floor(Math.random() * 8) + 2;
                         break;
                     case 3: // 2-3 digits × 2 digits
                         num1 = Math.floor(Math.random() * 900) + 100;
@@ -641,7 +645,7 @@
                 // Clear existing options
                 document.querySelectorAll('.answer-option').forEach(option => option.remove());
                 
-                // MODIFICATION: 4 positions
+                // 4 positions
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight + 20;
                 const maxTop = document.querySelector('.game-container').clientHeight - 100;
@@ -654,7 +658,7 @@
                     maxTop
                 ];
                 
-                // MODIFICATION: Generate 3 wrong answers
+                // Generate 3 wrong answers
                 const wrongAnswers = [];
                 let attempts = 0;
                 while(wrongAnswers.length < 3 && attempts < 50) { // 3 wrong answers
@@ -673,15 +677,21 @@
                     }
                 }
                 
-                // MODIFICATION: Ensure we have 3 wrong answers
+                // Ensure we have 3 wrong answers
                 while(wrongAnswers.length < 3) {
                     const fallback = this.correctAnswer + (wrongAnswers.length + 1) * 5;
-                    if(!wrongAnswers.includes(fallback)) {
+                    if(!wrongAnswers.includes(fallback) && fallback !== this.correctAnswer) {
                         wrongAnswers.push(fallback);
+                    } else {
+                        // fallback if first one fails
+                        const fallback2 = this.correctAnswer + 10 + wrongAnswers.length;
+                         if(!wrongAnswers.includes(fallback2) && fallback2 !== this.correctAnswer) {
+                            wrongAnswers.push(fallback2);
+                         }
                     }
                 }
                 
-                // MODIFICATION: 4 total answers.
+                // 4 total answers.
                 // This logic ensures the correct answer is ALWAYS included.
                 const allAnswers = [this.correctAnswer, wrongAnswers[0], wrongAnswers[1], wrongAnswers[2]];
                 
@@ -790,7 +800,7 @@
                 this.score += 1;
                 this.questionCount++;
                 this.showFeedback('Correct! +1 Point', 'correct');
-                this.correctSound.triggerAttackRelease('C5', '8n', Tone.now()); // NEW: Play cheerful sound
+                this.correctSound.triggerAttackRelease('C5', '8n', Tone.now()); // Play cheerful sound
                 this.updateUI();
                 
                 if(this.questionCount >= this.questionsPerLevel) {
@@ -804,14 +814,16 @@
                 this.questionAnswered = true; 
                 this.lives--;
                 this.showFeedback('Wrong! -1 Life', 'wrong');
-                this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // NEW: Play crash sound
+                this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // Play crash sound
                 this.updateUI();
                 
                 const characterEl = document.getElementById('character');
                 if (characterEl) {
+                    // MODIFICATION: Use image path
                     characterEl.style.backgroundImage = `url('${this.characterCryingUrl}')`;
                     
                     setTimeout(() => {
+                        // MODIFICATION: Use image path
                         characterEl.style.backgroundImage = `url('${this.characterNormalUrl}')`;
                     }, 1500);
                 }
@@ -829,7 +841,7 @@
                 this.questionAnswered = true;
                 this.lives--;
                 this.showFeedback('Missed! -1 Life', 'wrong');
-                this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // NEW: Play crash sound for miss
+                this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // Play crash sound for miss
                 this.updateUI();
                 
                 document.querySelectorAll('.answer-option').forEach(opt => {
@@ -922,6 +934,7 @@
                 
                 this.character.style.top = this.characterPosition + 'px';
                 
+                // MODIFICATION: Use image path
                 document.getElementById('character').style.backgroundImage = `url('${this.characterNormalUrl}')`;
                 
                 document.querySelectorAll('.answer-option').forEach(option => option.remove());
@@ -939,16 +952,17 @@
         function restartGame() {
             document.getElementById('level-select-screen').style.display = 'flex';
             document.getElementById('game-over-screen').style.display = 'none';
-            document.getElementById('character').style.backgroundImage = "url('https://placehold.co/80x80/E0F7FA/000000?text=Player&font=Comic+Sans+MS')";
+            // MODIFICATION: Use image path
+            document.getElementById('character').style.backgroundImage = "url('image/cinnamoroll.png')";
         }
 
         function nextLevel() {
             game.nextLevel();
         }
 
-        // NEW: Made this function async to handle Tone.start()
+        // Made this function async to handle Tone.start()
         async function startGameAtLevel(selectedLevel) {
-            // NEW: Start AudioContext on user gesture.
+            // Start AudioContext on user gesture.
             if (window.Tone && Tone.context.state !== 'running') {
                 try {
                     await Tone.start();
@@ -977,7 +991,7 @@
                 game_title: "Multiplication Sky Runner"
             };
 
-            // MODIFICATION: Fixed typo game_T_title -> game_title
+            // Fixed typo game_T_title -> game_title
             document.querySelector('#level-select-screen h2').textContent = defaultConfig.game_title;
             
             sdk.onConfigDidChange((config) => {
