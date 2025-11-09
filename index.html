@@ -56,7 +56,8 @@
             right: 20px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            padding: 10px 15px;
+            /* MODIFICATION: Doubled top/bottom padding */
+            padding: 20px 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 100;
             /* MODIFICATION: Removed fixed height to make panel shorter */
@@ -68,6 +69,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            /* MODIFICATION: Added gap for spacing */
+            gap: 15px;
             /* MODIFICATION: Removed margin-bottom */
             /* margin-bottom: 8px; */
         }
@@ -132,7 +135,8 @@
 
         .question-display {
             text-align: center;
-            font-size: 14px;
+            /* MODIFICATION: Doubled font size */
+            font-size: 28px;
             font-weight: bold;
             color: #2E8B57;
             background: #F0F8FF;
@@ -178,7 +182,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            /* MODIFICATION: Doubled font size */
+            font-size: 28px;
             font-weight: bold;
             color: white;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -625,8 +630,8 @@
             }
 
             moveCharacter(delta) {
-                // MODIFICATION: Changed min position from 100 to 70 for greater range
-                this.characterPosition = Math.max(70, Math.min(460, this.characterPosition + delta));
+                // MODIFICATION: Changed min position from 70 to 110 for larger UI panel
+                this.characterPosition = Math.max(110, Math.min(460, this.characterPosition + delta));
                 this.character.style.top = this.characterPosition + 'px';
             }
 
@@ -663,8 +668,8 @@
                 // Clear existing options
                 document.querySelectorAll('.answer-option').forEach(option => option.remove());
                 
-                // MODIFICATION: Changed top position from 120 to 90
-                const positions = [90, 280, 440]; // Top, middle, bottom positions
+                // MODIFICATION: Changed top position from 90 to 120
+                const positions = [120, 280, 440]; // Top, middle, bottom positions
                 
                 // Generate exactly 2 wrong answers
                 const wrongAnswers = [];
