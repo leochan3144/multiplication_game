@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multiplication Sky Runner</title>
+  <!-- NEW: Added Tone.js for sound effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
   <!-- MODIFICATION: Correct SDK script -->
   <script src="/_sdk/element_sdk.js"></script>
   <style>
@@ -164,7 +166,7 @@
             left: 80px;
             width: 80px;  /* Increased size for image */
             height: 80px; /* Increased size for image */
-            background-image: url('image/cinnamoroll.png');
+            background-image: url('https://placehold.co/80x80/ffffff/ffffff?text=.'); /* Cinnamoroll placeholder */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -435,7 +437,8 @@
    </div>
    <!-- END MODIFICATION -->
 
-   <div class="character" id="character"></div>
+   <!-- NOTE: Using a placeholder for Cinnamoroll image. -->
+   <div class="character" id="character" style="background-image: url('https://placehold.co/80x80/E0F7FA/000000?text=Player&font=Comic+Sans+MS');"></div>
    <div class="touch-controls">
     <div class="control-btn up" id="up-btn">
      ↑
@@ -514,13 +517,43 @@
                 this.activeCandies = new Set();
                 this.questionAnswered = false;
                 
+                // NEW: Audio synthesizers
+                this.correctSound = null;
+                this.wrongSound = null;
+                this.characterCryingUrl = 'https://placehold.co/80x80/FFCDD2/B71C1C?text=Sad&font=Comic+Sans+MS';
+                this.characterNormalUrl = 'https://placehold.co/80x80/E0F7FA/000000?text=Player&font=Comic+Sans+MS';
+                
                 this.initializeGame();
                 this.setupControls();
-                // Don't auto-start level - wait for level selection
+                this.initializeAudio(); // NEW
+            }
+
+            // NEW: Initialize audio components
+            initializeAudio() {
+                try {
+                    // "Cheerful" sound
+                    this.correctSound = new Tone.Synth({
+                        oscillator: { type: 'triangle' },
+                        envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 }
+                    }).toDestination();
+
+                    // "Crash" sound
+                    this.wrongSound = new Tone.NoiseSynth({
+                        noise: { type: 'white' },
+                        envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }
+                    }).toDestination();
+                } catch (e) {
+                    console.error('Failed to initialize audio:', e);
+                    // Create dummy objects if Tone.js failed (e.g., in a restricted environment)
+                    const dummySound = { triggerAttackRelease: () => {} };
+                    this.correctSound = this.correctSound || dummySound;
+                    this.wrongSound = this.wrongSound || dummySound;
+                }
             }
 
             initializeGame() {
                 this.character.style.top = this.characterPosition + 'px';
+                this.character.style.backgroundImage = `url('${this.characterNormalUrl}')`;
                 this.updateUI();
             }
 
@@ -648,17 +681,20 @@
                     }
                 }
                 
-                // MODIFICATION: 4 total answers
+                // MODIFICATION: 4 total answers.
+                // This logic ensures the correct answer is ALWAYS included.
                 const allAnswers = [this.correctAnswer, wrongAnswers[0], wrongAnswers[1], wrongAnswers[2]];
                 
+                // Shuffle the answers
                 for(let i = allAnswers.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
                 }
                 
+                // This check is a safeguard, but with the above logic, it should always be true.
                 if(!allAnswers.includes(this.correctAnswer)) {
                     console.error('Correct answer missing after shuffle!');
-                    allAnswers[0] = this.correctAnswer;
+                    allAnswers[0] = this.correctAnswer; // Force it in if something went wrong
                 }
                 
                 this.activeCandies = new Set();
@@ -674,7 +710,6 @@
                     
                     this.activeCandies.add(candyId);
                     
-                    // We still add the class for logic, even though there's no style
                     if(parseInt(answer) === parseInt(this.correctAnswer)) {
                         option.classList.add('correct');
                     } else {
@@ -755,6 +790,7 @@
                 this.score += 1;
                 this.questionCount++;
                 this.showFeedback('Correct! +1 Point', 'correct');
+                this.correctSound.triggerAttackRelease('C5', '8n', Tone.now()); // NEW: Play cheerful sound
                 this.updateUI();
                 
                 if(this.questionCount >= this.questionsPerLevel) {
@@ -768,14 +804,15 @@
                 this.questionAnswered = true; 
                 this.lives--;
                 this.showFeedback('Wrong! -1 Life', 'wrong');
+                this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // NEW: Play crash sound
                 this.updateUI();
                 
                 const characterEl = document.getElementById('character');
                 if (characterEl) {
-                    characterEl.style.backgroundImage = "url('image/crying.png')";
+                    characterEl.style.backgroundImage = `url('${this.characterCryingUrl}')`;
                     
                     setTimeout(() => {
-                        characterEl.style.backgroundImage = "url('image/cinnamoroll.png')";
+                        characterEl.style.backgroundImage = `url('${this.characterNormalUrl}')`;
                     }, 1500);
                 }
                 
@@ -792,6 +829,7 @@
                 this.questionAnswered = true;
                 this.lives--;
                 this.showFeedback('Missed! -1 Life', 'wrong');
+                this.wrongSound.triggerAttackRelease('0.1', Tone.now()); // NEW: Play crash sound for miss
                 this.updateUI();
                 
                 document.querySelectorAll('.answer-option').forEach(opt => {
@@ -884,7 +922,7 @@
                 
                 this.character.style.top = this.characterPosition + 'px';
                 
-                document.getElementById('character').style.backgroundImage = "url('image/cinnamoroll.png')";
+                document.getElementById('character').style.backgroundImage = `url('${this.characterNormalUrl}')`;
                 
                 document.querySelectorAll('.answer-option').forEach(option => option.remove());
                 
@@ -901,14 +939,26 @@
         function restartGame() {
             document.getElementById('level-select-screen').style.display = 'flex';
             document.getElementById('game-over-screen').style.display = 'none';
-            document.getElementById('character').style.backgroundImage = "url('image/cinnamoroll.png')";
+            document.getElementById('character').style.backgroundImage = "url('https://placehold.co/80x80/E0F7FA/000000?text=Player&font=Comic+Sans+MS')";
         }
 
         function nextLevel() {
             game.nextLevel();
         }
 
-        function startGameAtLevel(selectedLevel) {
+        // NEW: Made this function async to handle Tone.start()
+        async function startGameAtLevel(selectedLevel) {
+            // NEW: Start AudioContext on user gesture.
+            if (window.Tone && Tone.context.state !== 'running') {
+                try {
+                    await Tone.start();
+                    console.log('AudioContext started');
+                } catch (e) {
+                    console.error('AudioContext failed to start:', e);
+                }
+            }
+            // END NEW
+
             document.getElementById('level-select-screen').style.display = 'none';
             game = new MultiplicationGame();
             game.level = selectedLevel;
