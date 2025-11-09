@@ -54,8 +54,14 @@
 
         .character {
             position: absolute;
-            /* MODIFICATION: Reverted back to emoji style */
-            font-size: 50px;
+            /* MODIFICATION: Restored Cinnamoroll image style */
+            width: 80px; 
+            height: 80px;
+            background-image: url('image/cinnamoroll.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            /* END MODIFICATION */
             cursor: pointer;
             transition: top 0.1s;
             z-index: 100;
@@ -86,16 +92,12 @@
             animation-direction: normal, alternate;
             animation-fill-mode: forwards, none;
 
-            /* MODIFICATION: Reverted to original colors */
-            background: #f0f0f0; /* Default light gray */
-            border: 3px solid #ccc; /* Default border */
+            /* MODIFICATION: Restored pink candy color */
+            background: #FFB6C1; /* Pink */
+            border: 3px solid #FF69B4; /* Hotter pink border */
         }
         
-        /* MODIFICATION: Added correct class back */
-        .answer-option.correct {
-            background: #a5d6a7; /* Light green */
-            border: 3px solid #66bb6a; /* Darker green */
-        }
+        /* MODIFICATION: Removed .correct class styling */
         
         /* MODIFICATION: Keyframes use transform instead of 'right' */
         @keyframes moveAnswer {
@@ -677,7 +679,16 @@
                 this.lives--;
                 this.updateStats();
                 
-                // MODIFICATION: Removed crying character logic
+                // MODIFICATION: Restored crying character logic
+                const characterEl = document.querySelector('.character');
+                if (characterEl) {
+                    characterEl.style.backgroundImage = "url('image/crying.png')";
+                    
+                    // Revert back after 2 seconds
+                    setTimeout(() => {
+                        characterEl.style.backgroundImage = "url('image/cinnamoroll.png')";
+                    }, 2000);
+                }
                 
                 if (this.lives <= 0) {
                     this.endGame();
@@ -755,7 +766,11 @@
             document.getElementById('game-over-screen').style.display = 'none';
             document.getElementById('start-screen').style.display = 'flex';
             
-            // MODIFICATION: Removed character image reset
+            // MODIFICATION: Restored character image reset
+            const characterEl = document.querySelector('.character');
+            if (characterEl) {
+                characterEl.style.backgroundImage = "url('image/cinnamoroll.png')";
+            }
         }
 
         // --- Element SDK Integration ---
@@ -763,20 +778,16 @@
             const sdk = window.ElementSDK.init();
             
             const defaultConfig = {
-                game_title: "Multiplication Sky Runner",
-                // MODIFICATION: Added emoji back
-                character_emoji: "✈️"
+                game_title: "Multiplication Sky Runner"
+                // MODIFICATION: Removed emoji setting
             };
             
-            // MODIFICATION: Set default emoji on load
-            document.getElementById('character').textContent = defaultConfig.character_emoji;
+            // MODIFICATION: Removed default emoji load
             
             sdk.onConfigDidChange((config) => {
                 const title = config.game_title || defaultConfig.game_title;
                 document.getElementById('game-title').textContent = title;
-                // MODIFICATION: Set character emoji
-                const characterEmoji = config.character_emoji || defaultConfig.character_emoji;
-                document.getElementById('character').textContent = characterEmoji;
+                // MODIFICATION: Removed character emoji setting
             });
             
             sdk.readiness.setReady();
@@ -789,13 +800,8 @@
                             id: "game_title",
                             label: "Game Title",
                             type: "text"
-                        },
-                        // MODIFICATION: Added emoji setting back
-                        {
-                            id: "character_emoji",
-                            label: "Character Emoji",
-                            type: "text"
                         }
+                        // MODIFICATION: Removed emoji setting
                     ]
                 },
                 mapToCapabilities: (config) => ({
@@ -805,9 +811,8 @@
                     fontSizeable: undefined
                 }),
                 mapToEditPanelValues: (config) => new Map([
-                    ["game_title", config.game_title || defaultConfig.game_title],
-                    // MODIFICATION: Add emoji back
-                    ["character_emoji", config.character_emoji || defaultConfig.character_emoji]
+                    ["game_title", config.game_title || defaultConfig.game_title]
+                    // MODIFICATION: Removed emoji setting
                 ])
             });
         }
