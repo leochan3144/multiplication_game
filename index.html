@@ -674,12 +674,17 @@
                     minTop + (spacing * 2), 
                     maxTop
                 ];
+
+                // MODIFICATION: Shuffle positions to place 3 candies in 4 slots randomly
+                for(let i = positions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [positions[i], positions[j]] = [positions[j], positions[i]];
+                }
+                // END MODIFICATION
                 
-                // Generate 3 wrong answers
+                // MODIFICATION: Generate 2 wrong answers
                 const wrongAnswers = [];
-                // MODIFICATION: Simplified loop. Will now run until 3 wrong answers are found.
-                // Removed 'attempts' limit and the second fallback 'while' loop.
-                while(wrongAnswers.length < 3) { 
+                while(wrongAnswers.length < 2) { 
                     let wrongAnswer;
                     const variation = Math.floor(Math.random() * 20) + 1;
                     
@@ -695,9 +700,9 @@
                 }
                 // END MODIFICATION
                 
-                // 4 total answers.
-                // This logic ensures the correct answer is ALWAYS included.
-                const allAnswers = [this.correctAnswer, wrongAnswers[0], wrongAnswers[1], wrongAnswers[2]];
+                // MODIFICATION: 3 total answers.
+                const allAnswers = [this.correctAnswer, wrongAnswers[0], wrongAnswers[1]];
+                // END MODIFICATION
                 
                 // Shuffle the answers
                 for(let i = allAnswers.length - 1; i > 0; i--) {
@@ -705,9 +710,7 @@
                     [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
                 }
                 
-                // MODIFICATION: Add Number() conversion for a more robust check
                 if(!allAnswers.map(Number).includes(Number(this.correctAnswer))) {
-                // END MODIFICATION
                     console.error('Correct answer missing after shuffle!');
                     allAnswers[0] = this.correctAnswer; // Force it in if something went wrong
                 }
@@ -715,20 +718,19 @@
                 this.activeCandies = new Set();
                 let correctIsPresent = false; // Add a new check
                 
+                // MODIFICATION: Loop will now run 3 times
                 allAnswers.forEach((answer, index) => {
                     const option = document.createElement('div');
                     option.className = 'answer-option';
                     option.textContent = answer;
-                    option.style.top = positions[index] + 'px';
+                    option.style.top = positions[index] + 'px'; // Use one of the shuffled positions
                     option.dataset.answer = answer;
                     const candyId = `candy_${Date.now()}_${index}`;
                     option.dataset.candyId = candyId;
                     
                     this.activeCandies.add(candyId);
                     
-                    // MODIFICATION: Added Number() conversions for a more robust check
                     if(Number(answer) === Number(this.correctAnswer)) {
-                    // END MODIFICATION
                         option.classList.add('correct');
                         correctIsPresent = true; // Mark as found
                     } else {
@@ -842,10 +844,11 @@
                     // MODIFICATION: Use image path
                     characterEl.style.backgroundImage = `url('${this.characterCryingUrl}')`;
                     
+                    // MODIFICATION: Changed timer to 1 second (1000ms)
                     setTimeout(() => {
                         // MODIFICATION: Use image path
                         characterEl.style.backgroundImage = `url('${this.characterNormalUrl}')`;
-                    }, 1500);
+                    }, 1000);
                 }
                 
                 /* MODIFICATION: Unified logic inside 1.5s delay */
