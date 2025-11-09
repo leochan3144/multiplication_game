@@ -87,54 +87,50 @@
             color: #2E8B57;
         }
 
+        /* MODIFIED: Adjusted lives display alignment */
         .lives-display {
             display: flex;
             align-items: center;
-            gap: 3px;
             font-size: 16px;
             font-weight: bold;
             color: #d9534f;
+            /* Added padding to vertically center hearts better */
+            padding-top: 2px;
         }
 
+        /* MODIFIED: Increased gap for new heart shape */
         #lives-container {
             display: flex;
-            gap: 4px;
+            gap: 6px;
         }
 
+        /* MODIFIED: New, cleaner CSS heart shape */
         .heart {
-            width: 18px;
-            height: 18px;
-            background: #FF6B6B;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            transform: rotate(-45deg);
             position: relative;
+            width: 20px;
+            height: 18px;
         }
 
-        .heart::before {
-            content: '';
-            width: 9px;
-            height: 14px;
+        .heart::before,
+        .heart::after {
+            content: "";
             position: absolute;
-            left: 9px;
+            left: 10px; /* Half of width */
             top: 0;
+            width: 10px; /* Half of width */
+            height: 16px; /* Taller part */
             background: #FF6B6B;
-            border-radius: 50px 50px 0 0;
+            border-radius: 10px 10px 0 0;
             transform: rotate(-45deg);
             transform-origin: 0 100%;
         }
 
         .heart::after {
-            content: '';
-            width: 9px;
-            height: 14px;
-            position: absolute;
             left: 0;
-            top: -4px;
-            background: #FF6B6B;
-            border-radius: 50px 50px 0 0;
             transform: rotate(45deg);
             transform-origin: 100% 100%;
         }
+        /* END HEART MODIFICATION */
 
         .score-display {
             font-size: 16px;
@@ -327,16 +323,7 @@
             transform: scale(0.95);
         }
 
-        .controls-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #333;
-        }
+        /* REMOVED .controls-info CSS block */
 
         .touch-controls {
             position: absolute;
@@ -423,7 +410,7 @@
         <div class="stats-left">
             <div class="level-display">Level <span id="current-level">1</span></div>
             <div class="lives-display">
-                <span>Lives: </span>
+                <!-- REMOVED "Lives: " text span -->
                 <div id="lives-container">
                    <div class="heart"></div>
                    <div class="heart"></div>
@@ -448,10 +435,7 @@
     </div>
    </div>
    <div class="feedback" id="feedback"></div>
-   <div class="controls-info"><strong>Controls:</strong><br>
-     Touch buttons or use keyboard<br>
-     ↑/↓ Arrow Keys or W/S
-   </div>
+   <!-- REMOVED controls-info div -->
    <div class="game-over-screen" id="game-over-screen">
     <div class="modal">
      <h2>Game Over!</h2>
@@ -522,7 +506,7 @@
                 this.wrongSound = null;
 
                 // MODIFICATION: Set image paths to user's "image" folder
-                this.characterCryingUrl = 'image/crying.png';
+                this.characterCryingUrl = 'image/cinnamoroll_crying.png';
                 this.characterNormalUrl = 'image/cinnamoroll.png';
                 
                 this.initializeGame();
