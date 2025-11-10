@@ -665,9 +665,9 @@
                 
                 // 2. Define 3 distinct, non-overlapping positions
                 const positions = [
-                    minTop, // Top
-                    minTop + (maxTop+400 - minTop) / 2, // Middle
-                    maxTop+400 // Bottom
+                    minTop+200, // Top
+                    minTop + (maxTop - minTop) / 2+200, // Middle
+                    maxTop // Bottom
                 ];
 
                 // 3. Shuffle the 3 positions
