@@ -596,7 +596,7 @@
             moveCharacter(delta) {
                 // Update vertical constraints to account for larger UI panel
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
-                const minTop = uiPanelHeight + 20; // Just below panel
+                const minTop = uiPanelHeight; 
                 // MODIFICATION: Increased bottom padding from 140 to 180 for iPad "safe area"
                 const maxTop = document.querySelector('.game-container').clientHeight - 180; 
                 
