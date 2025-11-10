@@ -598,7 +598,7 @@
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight; 
                 // MODIFICATION: Increased bottom padding from 140 to 180 for iPad "safe area"
-                const maxTop = document.querySelector('.game-container').clientHeight - 180; 
+                const maxTop = document.querySelector('.game-container').clientHeight - 90; 
                 
                 this.characterPosition = Math.max(minTop, Math.min(maxTop, this.characterPosition + delta));
                 this.character.style.top = this.characterPosition + 'px';
