@@ -597,8 +597,8 @@
                 // Update vertical constraints to account for larger UI panel
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight + 20; // Just below panel
-                // MODIFICATION: Increased bottom padding from 20 to 40 (80 + 40 = 120)
-                const maxTop = document.querySelector('.game-container').clientHeight - 120; 
+                // MODIFICATION: Increased bottom padding from 40 to 60 (80 + 60 = 140)
+                const maxTop = document.querySelector('.game-container').clientHeight - 140; 
                 
                 this.characterPosition = Math.max(minTop, Math.min(maxTop, this.characterPosition + delta));
                 this.character.style.top = this.characterPosition + 'px';
@@ -660,8 +660,8 @@
                 // 1. Calculate boundaries (with new "too low" fix)
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight + 20;
-                // MODIFICATION: Increased bottom padding from 20 to 40 (80 + 40 = 120)
-                const maxTop = document.querySelector('.game-container').clientHeight - 120;
+                // MODIFICATION: Increased bottom padding from 40 to 60 (80 + 60 = 140)
+                const maxTop = document.querySelector('.game-container').clientHeight - 140;
                 
                 // 2. Define 3 distinct, non-overlapping positions
                 const positions = [
@@ -959,8 +959,8 @@
                 // MODIFICATION: Reset character position dynamically and CORRECTLY
                 const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
                 const minTop = uiPanelHeight + 20;
-                // MODIFICATION: Increased bottom padding from 20 to 40 (80 + 40 = 120)
-                const maxTop = document.querySelector('.game-container').clientHeight - 120; 
+                // MODIFICATION: Increased bottom padding from 40 to 60 (80 + 60 = 140)
+                const maxTop = document.querySelector('.game-container').clientHeight - 140; 
                 this.characterPosition = minTop + ((maxTop - minTop) / 2); // Center it
                 // END MODIFICATION
                 
@@ -1014,8 +1014,8 @@
             // This ensures it matches the move/candy logic right from the start.
             const uiPanelHeight = document.querySelector('.ui-panel').offsetHeight;
             const minTop = uiPanelHeight + 20;
-            // MODIFICATION: Increased bottom padding from 20 to 40 (80 + 40 = 120)
-            const maxTop = document.querySelector('.game-container').clientHeight - 120;
+            // MODIFICATION: Increased bottom padding from 40 to 60 (80 + 60 = 140)
+            const maxTop = document.querySelector('.game-container').clientHeight - 140;
             game.characterPosition = minTop + ((maxTop - minTop) / 2); // Center it
             game.character.style.top = game.characterPosition + 'px';
             // --- END NEW MODIFICATION ---
